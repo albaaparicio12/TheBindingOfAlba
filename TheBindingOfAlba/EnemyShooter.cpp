@@ -1,7 +1,7 @@
-#include "Enemy.h"
+#include "EnemyShooter.h"
 
-Enemy::Enemy(float x, float y, Game* game)
-	: Actor("res/spider.png", x, y, 32, 32, game) {
+EnemyShooter::EnemyShooter(float x, float y, Game* game)
+	: Enemy("res/spider.png", x, y, 32, 32, game) {
 
 	vx = 1;
 
@@ -28,25 +28,4 @@ void Enemy::update() {
 	if (state == States::DYING) {
 		animation = aDying;
 	}
-}
-
-void Enemy::draw() {
-	animation->draw(x, y);
-}
-
-void Enemy::impacted() {
-	if (state != States::DYING) {
-		state = States::DYING;
-	}
-}
-
-void Enemy::changeDirection(float x, float y) {
-	if (x < 0)
-		vx = 1;
-	else if (x > 0)
-		vx = -1;
-	if (y < 0)
-		vy = 1;
-	else if (y > 0)
-		vy = -1;
 }
