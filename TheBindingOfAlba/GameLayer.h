@@ -13,6 +13,7 @@
 #include "EnemyChase.h"
 #include "EnemyShooter.h"
 #include "Tile.h"
+#include "Door.h"
 
 #include <fstream> // Leer ficheros
 #include <sstream> // Leer líneas / String
@@ -55,6 +56,7 @@ public:
 
 
 	Space* space;
+	Door* door;
 
 	void endGame();
 };

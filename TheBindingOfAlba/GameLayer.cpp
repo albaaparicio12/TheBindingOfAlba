@@ -330,6 +330,13 @@ void GameLayer::loadMapObject(char character, int x, int y)
 		space->addDynamicActor(enemy);
 		break;
 	}
+	case 'D': {
+		Tile* door = new Door(x, y, game);
+		door->y = door->y - door->height / 2;
+		tiles.push_back(door);
+		space->addStaticActor(door);
+		break;
+	}
 	case '1': {
 		player = new Player(x, y, game);
 		player->y = player->y - player->height / 2;

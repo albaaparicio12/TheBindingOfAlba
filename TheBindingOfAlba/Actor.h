@@ -19,4 +19,5 @@ public:
 	int fileWidth;
 	int fileHeight;
 	Game* game; // referencia al juego
+	void changeTexture(string filename);
 };
