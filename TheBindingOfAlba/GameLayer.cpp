@@ -163,16 +163,17 @@ void GameLayer::update() {
 
 	list<Enemy*> deleteEnemies;
 	list<Projectile*> deleteProjectiles;
-	
+	list<ProjectileEnemy*> deleteProjectilesEnemy;
+
 	for (auto const& tile : tiles) {
 		for (auto const& projectile : projectilesEnemy) {
 			if (projectile->isOverlap(player)) {
-				bool pInList = std::find(deleteProjectiles.begin(),
-					deleteProjectiles.end(),
-					projectile) != deleteProjectiles.end();
+				bool pInList = std::find(deleteProjectilesEnemy.begin(),
+					deleteProjectilesEnemy.end(),
+					projectile) != deleteProjectilesEnemy.end();
 
 				if (!pInList) {
-					deleteProjectiles.push_back(projectile);
+					deleteProjectilesEnemy.push_back(projectile);
 				}
 				player->getShoot();
 				if (player->lives == 0) {
@@ -180,12 +181,12 @@ void GameLayer::update() {
 				}
 			}
 			if (tile->isOverlap(projectile)) {
-				bool pInList = std::find(deleteProjectiles.begin(),
-					deleteProjectiles.end(),
-					projectile) != deleteProjectiles.end();
+				bool pInList = std::find(deleteProjectilesEnemy.begin(),
+					deleteProjectilesEnemy.end(),
+					projectile) != deleteProjectilesEnemy.end();
 
 				if (!pInList) {
-					deleteProjectiles.push_back(projectile);
+					deleteProjectilesEnemy.push_back(projectile);
 				}
 			}
 		}
@@ -250,8 +251,12 @@ void GameLayer::update() {
 	}
 	deleteProjectiles.clear();
 
+	for (auto const& delProjectile : deleteProjectilesEnemy) {
+		projectilesEnemy.remove(delProjectile);
+		space->removeDynamicActor(delProjectile);
+	}
+	deleteProjectilesEnemy.clear();
 
-	//cout << "update GameLayer" << endl;
 }
 
 void GameLayer::draw() {
