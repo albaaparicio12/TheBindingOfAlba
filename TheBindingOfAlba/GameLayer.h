@@ -9,6 +9,7 @@
 #include "Audio.h" 
 #include "Tile.h" 
 #include "Space.h" 
+#include "EnemyChase.h"
 
 #include <fstream> // Leer ficheros
 #include <sstream> // Leer líneas / String

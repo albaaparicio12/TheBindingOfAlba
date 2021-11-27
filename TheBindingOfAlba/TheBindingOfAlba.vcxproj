@@ -24,6 +24,7 @@
     <ClCompile Include="Audio.cpp" />
     <ClCompile Include="Background.cpp" />
     <ClCompile Include="Enemy.cpp" />
+    <ClCompile Include="EnemyChase.cpp" />
     <ClCompile Include="EnemyShooter.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameLayer.cpp" />
@@ -41,6 +42,7 @@
     <ClInclude Include="Audio.h" />
     <ClInclude Include="Background.h" />
     <ClInclude Include="Enemy.h" />
+    <ClInclude Include="EnemyChase.h" />
     <ClInclude Include="EnemyShooter.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameLayer.h" />

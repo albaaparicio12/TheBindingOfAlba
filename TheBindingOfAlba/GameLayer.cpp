@@ -134,6 +134,7 @@ void GameLayer::update() {
 	for (auto const& enemy : enemies) {
 		enemy->update();
 		enemy->changeDirection(player->x, player->y);
+		
 	}
 
 	for (auto const& projectile : projectiles) {
@@ -212,7 +213,7 @@ void GameLayer::update() {
 	deleteProjectiles.clear();
 
 
-	cout << "update GameLayer" << endl;
+	//cout << "update GameLayer" << endl;
 }
 
 void GameLayer::draw() {
@@ -268,7 +269,7 @@ void GameLayer::loadMapObject(char character, int x, int y)
 {
 	switch (character) {
 	case 'E': {
-		Enemy* enemy = new Enemy(x, y, game);
+		Enemy* enemy = new EnemyChase(x, y, game);
 		enemy->y = enemy->y - enemy->height / 2;
 		enemies.push_back(enemy);
 		space->addDynamicActor(enemy);
