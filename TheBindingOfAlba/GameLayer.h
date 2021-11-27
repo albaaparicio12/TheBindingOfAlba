@@ -11,6 +11,7 @@
 #include "Space.h" 
 #include "EnemyChase.h"
 #include "EnemyShooter.h"
+#include "Tile.h"
 
 #include <fstream> // Leer ficheros
 #include <sstream> // Leer líneas / String
@@ -38,6 +39,7 @@ public:
 
 	list<Enemy*> enemies;
 	list<Projectile*> projectiles;
+	list<Tile*> tiles;
 
 	Actor* backgroundPoints;
 	Text* textPoints;
@@ -48,7 +50,6 @@ public:
 	void loadMap(string name);
 	void loadMapObject(char character, int x, int y);
 	int mapWidth;
-	list<Tile*> tiles;
 
 
 	Space* space;

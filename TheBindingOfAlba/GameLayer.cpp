@@ -38,8 +38,9 @@ void GameLayer::processControls() {
 		if (newProjectile != NULL) {
 			space->addDynamicActor(newProjectile);
 			projectiles.push_back(newProjectile);
+			cout << "Proyectile" << endl;
 		}
-
+		
 	}
 	// Eje X
 	if (controlMoveX > 0) {
@@ -133,8 +134,7 @@ void GameLayer::update() {
 	player->update();
 	for (auto const& enemy : enemies) {
 		enemy->update();
-		enemy->changeDirection(player->x, player->y);
-		
+		enemy->changeDirection(player->x, player->y);		
 	}
 
 	for (auto const& projectile : projectiles) {
@@ -153,9 +153,9 @@ void GameLayer::update() {
 
 	list<Enemy*> deleteEnemies;
 	list<Projectile*> deleteProjectiles;
-
+	/*
 	for (auto const& projectile : projectiles) {
-		//if (projectile->isInRender() == false) {
+		if (projectile->isInRender() == false) {
 
 			bool pInList = std::find(deleteProjectiles.begin(),
 				deleteProjectiles.end(),
@@ -164,7 +164,21 @@ void GameLayer::update() {
 			if (!pInList) {
 				deleteProjectiles.push_back(projectile);
 			}
-		//}
+		}
+	}
+	*/
+	for (auto const& tile : tiles) {
+		for (auto const& projectile : projectiles) {
+			if (tile->isOverlap(projectile)) {
+				bool pInList = std::find(deleteProjectiles.begin(),
+					deleteProjectiles.end(),
+					projectile) != deleteProjectiles.end();
+
+				if (!pInList) {
+					deleteProjectiles.push_back(projectile);
+				}
+			}
+		}
 	}
 
 	for (auto const& enemy : enemies) {

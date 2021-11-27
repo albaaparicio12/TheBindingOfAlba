@@ -9,6 +9,8 @@ EnemyShooter::EnemyShooter(float x, float y, Game* game)
 
 	aMoving = new Animation("res/gusano.png", width, height,
 		330, 32, 6, 10, true, game);
+	aDying = new Animation("res/gusano.png", width, height,
+		128, 32, 6, 4, false, game);
 	animation = aMoving;
 
 }
@@ -22,6 +24,9 @@ void EnemyShooter::update() {
 	}
 	if (state == States::IDLE) {
 		animation = aMoving;
+	}
+	if (state == States::DYING) {
+		animation = aDying;
 	}
 }
 
