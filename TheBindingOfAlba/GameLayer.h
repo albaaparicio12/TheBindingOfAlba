@@ -5,6 +5,7 @@
 #include "Background.h"
 #include "Enemy.h"
 #include "Projectile.h"
+#include "ProjectileEnemy.h"
 #include "Text.h"
 #include "Audio.h" 
 #include "Tile.h" 
@@ -39,6 +40,7 @@ public:
 
 	list<Enemy*> enemies;
 	list<Projectile*> projectiles;
+	list<ProjectileEnemy*> projectilesEnemy;
 	list<Tile*> tiles;
 
 	Actor* backgroundPoints;
@@ -53,4 +55,6 @@ public:
 
 
 	Space* space;
+
+	void endGame();
 };

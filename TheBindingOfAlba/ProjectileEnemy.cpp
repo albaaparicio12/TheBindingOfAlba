@@ -2,5 +2,9 @@
 
 ProjectileEnemy::ProjectileEnemy(float x, float y, Game* game) :
 	Projectile("res/disparo_enemigo.png", x, y, game) {
-	vx = -9;
+}
+
+void ProjectileEnemy::update() {
+	x = x + vx;
+	y = y + vy;
 }

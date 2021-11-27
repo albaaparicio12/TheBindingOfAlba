@@ -19,6 +19,7 @@ void GameLayer::init() {
 	audioBackground->play();
 
 	projectiles.clear(); // Vaciar por si reiniciamos el juego
+	projectilesEnemy.clear();
 
 	enemies.clear(); // Vaciar por si reiniciamos el juego
 	loadMap("res/0.txt");
@@ -135,38 +136,61 @@ void GameLayer::update() {
 	for (auto const& enemy : enemies) {
 		enemy->update();
 		enemy->changeDirection(player->x, player->y);		
+		ProjectileEnemy* newProjectile = enemy->shoot(player->x, player->y);
+		if (newProjectile != NULL) {
+			projectilesEnemy.push_back(newProjectile);
+		}
 	}
 
 	for (auto const& projectile : projectiles) {
 		projectile->update();
 	}
 
-	// Colisiones
-	for (auto const& enemy : enemies) {
-		if (player->isOverlap(enemy)) {
-			init();
-			return; // Cortar el for
-		}
+	for (auto const& projectile : projectilesEnemy) {
+		projectile->update();
 	}
 
+	for (auto const& enemy : enemies) {
+		if (player->isOverlap(enemy)) {
+			player->getShoot();
+			if (player->lives <= 0) {
+				init();
+				return;
+			}
+		}
+	}
 	// Colisiones , Enemy - Projectile
 
 	list<Enemy*> deleteEnemies;
 	list<Projectile*> deleteProjectiles;
-	/*
-	for (auto const& projectile : projectiles) {
-		if (projectile->isInRender() == false) {
+	
+	for (auto const& tile : tiles) {
+		for (auto const& projectile : projectilesEnemy) {
+			if (projectile->isOverlap(player)) {
+				bool pInList = std::find(deleteProjectiles.begin(),
+					deleteProjectiles.end(),
+					projectile) != deleteProjectiles.end();
 
-			bool pInList = std::find(deleteProjectiles.begin(),
-				deleteProjectiles.end(),
-				projectile) != deleteProjectiles.end();
+				if (!pInList) {
+					deleteProjectiles.push_back(projectile);
+				}
+				player->getShoot();
+				if (player->lives == 0) {
+					endGame();
+				}
+			}
+			if (tile->isOverlap(projectile)) {
+				bool pInList = std::find(deleteProjectiles.begin(),
+					deleteProjectiles.end(),
+					projectile) != deleteProjectiles.end();
 
-			if (!pInList) {
-				deleteProjectiles.push_back(projectile);
+				if (!pInList) {
+					deleteProjectiles.push_back(projectile);
+				}
 			}
 		}
 	}
-	*/
+	
 	for (auto const& tile : tiles) {
 		for (auto const& projectile : projectiles) {
 			if (tile->isOverlap(projectile)) {
@@ -210,8 +234,8 @@ void GameLayer::update() {
 				deleteEnemies.push_back(enemy);
 			}
 		}
-	}
 
+	}
 
 	for (auto const& delEnemy : deleteEnemies) {
 		enemies.remove(delEnemy);
@@ -240,9 +264,14 @@ void GameLayer::draw() {
 	for (auto const& projectile : projectiles) {
 		projectile->draw();
 	}
+
 	player->draw();
 	for (auto const& enemy : enemies) {
 		enemy->draw();
+	}
+
+	for (auto const& projectileEnemie : projectilesEnemy) {
+		projectileEnemie->draw();
 	}
 
 	backgroundPoints->draw();
@@ -310,4 +339,9 @@ void GameLayer::loadMapObject(char character, int x, int y)
 		break;
 	}
 	}
+}
+
+void GameLayer::endGame() {
+	init();
+	return;
 }

@@ -40,3 +40,7 @@ void EnemyChase::changeDirection(int x, int y) {
 	else if (this->y < y)
 		vy = 1;
 }
+
+ProjectileEnemy* EnemyChase::shoot(int xPlayer, int yPlayer) {
+	return NULL;
+}

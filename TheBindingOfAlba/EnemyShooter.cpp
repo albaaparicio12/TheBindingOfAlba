@@ -17,6 +17,7 @@ EnemyShooter::EnemyShooter(float x, float y, Game* game)
 
 void EnemyShooter::update() {
 	bool endAnimation = animation->update();
+	shootTime--;
 	if (endAnimation) {
 		if (state == States::DYING) {
 			state = States::DEAD;
@@ -31,4 +32,47 @@ void EnemyShooter::update() {
 }
 
 void EnemyShooter::changeDirection(int x, int y) {
+}
+
+ProjectileEnemy* EnemyShooter::shoot(int xPlayer, int yPlayer) {
+	if (shootTime <= 0) {
+		shootTime = shootCadence;
+		auto projectile = new ProjectileEnemy(x, y, game);
+		if (x - xPlayer > 10)
+			projectile->vx = -4;
+
+		else if (x - xPlayer < -10)
+			projectile->vx = 4;
+
+		if (y -yPlayer > 10)
+			projectile->vy = -4;
+
+		else if (y - yPlayer < -10)
+			projectile->vy = 4;
+
+		if (x - xPlayer <= 10 && x - xPlayer >= -10)  {
+			if (y > yPlayer) {
+				projectile->vy = -4;
+				projectile->vx = 0;
+			}
+			else {
+				projectile->vy = 4;
+				projectile->vx = 0;
+			}
+		}		
+		if (y - yPlayer <= 10 && y - yPlayer >= -10)  {
+			if (x < xPlayer) {
+				projectile->vy = 0;
+				projectile->vx = 4;
+			}
+			else {
+				projectile->vy = 0;
+				projectile->vx = -4;
+			}
+		}
+		return projectile;
+	}
+	else {
+		return NULL;
+	}
 }

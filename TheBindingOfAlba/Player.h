@@ -31,4 +31,8 @@ public:
 	
 	Orientation orientation = Orientation::RIGHT;
 	States state = States::IDLE;
+
+	int lives = 6;
+	int invulnerableTime = 0;
+	void getShoot();
 };
