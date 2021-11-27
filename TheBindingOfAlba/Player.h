@@ -16,7 +16,7 @@ public:
 	int shootCadence = 30;
 	int shootTime = 0;
 	Audio* audioShoot;
-	void draw() override; // Va a sobrescribir
+	void draw() override;
 	Animation* aIdleRight;
 	Animation* aIdleLeft;
 	Animation* aRunningRight;
@@ -27,8 +27,12 @@ public:
 	Animation* aRunningDown;
 	Animation* aShootingRight;
 	Animation* aShootingLeft;
-	Animation* animation; // Referencia a la animación mostrada
+	Animation* animation;
 	
 	Orientation orientation = Orientation::RIGHT;
 	States state = States::IDLE;
+
+	int lives = 6;
+	int invulnerableTime = 0;
+	void getShoot();
 };

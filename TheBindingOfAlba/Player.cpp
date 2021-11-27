@@ -27,6 +27,9 @@ Player::Player(float x, float y, Game* game)
 }
 
 void Player::update() {
+	if (invulnerableTime > 0) {
+		invulnerableTime--;
+	}
 	bool hasAnimationEnded = animation->update();
 	if (hasAnimationEnded) {
 		if (state == States::SHOOTING) {
@@ -103,7 +106,16 @@ Projectile* Player::shoot() {
 		shootTime = shootCadence;
 		auto projectile = new Projectile(x, y, game);
 		if (orientation == Orientation::LEFT) {
-			projectile->vx *= -1;
+			projectile->vx = -6;
+		}
+		else if (orientation == Orientation::RIGHT) {
+			projectile->vx = 6;
+		}
+		else if (orientation == Orientation::UP) {
+			projectile->vy = -6;
+		}
+		else if (orientation == Orientation::DOWN) {
+			projectile->vy = 6;
 		}
 		return projectile;
 	}
@@ -114,6 +126,21 @@ Projectile* Player::shoot() {
 }
 
 void Player::draw() {
-	animation->draw(x, y);
+	if (invulnerableTime == 0) {
+		animation->draw(x, y);
+	}
+	else {
+		if (invulnerableTime % 10 >= 0 && invulnerableTime % 10 <= 5) {
+			animation->draw(x, y);
+		}
+	}
 }
 
+void Player::getShoot() {
+	if (invulnerableTime <= 0) {
+		if (lives > 0) {
+			lives--;
+			invulnerableTime = 50;
+		}
+	}
+}
