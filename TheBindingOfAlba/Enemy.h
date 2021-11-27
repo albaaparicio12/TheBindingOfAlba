@@ -10,7 +10,7 @@ public:
 	void update();
 	void draw() override;
 	void impacted(); 
-	void changeDirection(int x, int y);
+	virtual void changeDirection(int x, int y);
 
 	States state = States::IDLE;
 	Animation* aDying;

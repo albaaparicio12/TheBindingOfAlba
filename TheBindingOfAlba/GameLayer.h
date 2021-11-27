@@ -10,6 +10,7 @@
 #include "Tile.h" 
 #include "Space.h" 
 #include "EnemyChase.h"
+#include "EnemyShooter.h"
 
 #include <fstream> // Leer ficheros
 #include <sstream> // Leer líneas / String

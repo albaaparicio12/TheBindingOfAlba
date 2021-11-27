@@ -29,3 +29,14 @@ void EnemyChase::update() {
 		animation = aDying;
 	}
 }
+
+void EnemyChase::changeDirection(int x, int y) {
+	if (this->x > x)
+		vx = -1;
+	else if (this->x < x)
+		vx = 1;
+	if (this->y > y)
+		vy = -1;
+	else if (this->y < y)
+		vy = 1;
+}
