@@ -13,6 +13,8 @@
 #include "EnemyChase.h"
 #include "EnemyShooter.h"
 #include "Tile.h"
+#include "Door.h"
+#include "Rock.h"
 
 #include <fstream> // Leer ficheros
 #include <sstream> // Leer líneas / String
@@ -43,9 +45,7 @@ public:
 	list<ProjectileEnemy*> projectilesEnemy;
 	list<Tile*> tiles;
 
-	Actor* backgroundPoints;
-	Text* textPoints;
-	int points;
+	Actor* backgroundLifes;
 
 	Audio* audioBackground;
 
