@@ -44,9 +44,7 @@ public:
 	list<ProjectileEnemy*> projectilesEnemy;
 	list<Tile*> tiles;
 
-	Actor* backgroundPoints;
-	Text* textPoints;
-	int points;
+	Actor* backgroundLifes;
 
 	Audio* audioBackground;
 
@@ -56,7 +54,6 @@ public:
 
 
 	Space* space;
-	Door* door;
 
 	void endGame();
 };

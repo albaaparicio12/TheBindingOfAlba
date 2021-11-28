@@ -9,19 +9,17 @@ GameLayer::GameLayer(Game* game)
 void GameLayer::init() {
 	space = new Space(0);
 	tiles.clear();
-	points = 0;
-	//player = new Player(50, 50, game);
+	
 	background = new Background("res/mapa1.png", WIDTH * 0.5, HEIGHT * 0.5, game);
-	backgroundPoints = new Actor("res/icono_puntos.png", WIDTH * 0.85, HEIGHT * 0.05, 24, 24, game);
-	textPoints = new Text("0", WIDTH * 0.9, HEIGHT * 0.05, game);
+	backgroundLifes = new Actor("res/corazon6.png", WIDTH * 0.1, HEIGHT * 0.05, 76, 22, game);
 
 	audioBackground = new Audio("res/musica_ambiente.mp3", true);
 	audioBackground->play();
 
-	projectiles.clear(); // Vaciar por si reiniciamos el juego
+	projectiles.clear();
 	projectilesEnemy.clear();
 
-	enemies.clear(); // Vaciar por si reiniciamos el juego
+	enemies.clear(); 
 	loadMap("res/0.txt");
 
 }
@@ -157,6 +155,7 @@ void GameLayer::update() {
 				init();
 				return;
 			}
+			backgroundLifes->changeTexture("res/corazon"+to_string(player->lives)+".png");
 		}
 	}
 	// Colisiones , Enemy - Projectile
@@ -179,6 +178,7 @@ void GameLayer::update() {
 				if (player->lives == 0) {
 					endGame();
 				}
+				backgroundLifes->changeTexture("res/corazon" + to_string(player->lives) + ".png");
 			}
 			if (tile->isOverlap(projectile)) {
 				bool pInList = std::find(deleteProjectilesEnemy.begin(),
@@ -216,11 +216,7 @@ void GameLayer::update() {
 				if (!pInList) {
 					deleteProjectiles.push_back(projectile);
 				}
-
 				enemy->impacted();
-				points++;
-				textPoints->content = to_string(points);
-
 			}
 		}
 	}
@@ -261,7 +257,7 @@ void GameLayer::update() {
 
 void GameLayer::draw() {
 	background->draw();
-
+	backgroundLifes->draw();
 	for (auto const& tile : tiles) {
 		tile->draw();
 	}
@@ -279,10 +275,7 @@ void GameLayer::draw() {
 		projectileEnemie->draw();
 	}
 
-	backgroundPoints->draw();
-	textPoints->draw();
-
-	SDL_RenderPresent(game->renderer); // Renderiza
+	SDL_RenderPresent(game->renderer);
 }
 
 void GameLayer::loadMap(string name) {
