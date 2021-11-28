@@ -14,6 +14,7 @@
 #include "EnemyShooter.h"
 #include "Tile.h"
 #include "Door.h"
+#include "Rock.h"
 
 #include <fstream> // Leer ficheros
 #include <sstream> // Leer líneas / String

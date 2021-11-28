@@ -330,6 +330,13 @@ void GameLayer::loadMapObject(char character, int x, int y)
 		space->addStaticActor(door);
 		break;
 	}
+	case 'R': {
+		Tile* rock = new Rock(x, y, game);
+		rock->y = rock->y - rock->height / 2;
+		tiles.push_back(rock);
+		space->addStaticActor(rock);
+		break;
+	}
 	case '1': {
 		player = new Player(x, y, game);
 		player->y = player->y - player->height / 2;
