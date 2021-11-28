@@ -34,12 +34,14 @@ public:
 	SDL_Renderer* renderer; // renderizador
 	bool loopActive; // Juego activo
 	Layer* gameLayer;
+
+	int currentLevel = 1;
+	int finalLevel = 3;
 };
 
 enum class States {
 	IDLE,
 	MOVING,
-	JUMPING,
 	DYING,
 	DEAD,
 	SHOOTING

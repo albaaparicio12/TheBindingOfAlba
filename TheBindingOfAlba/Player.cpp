@@ -144,3 +144,7 @@ void Player::getShoot() {
 		}
 	}
 }
+
+void Player::addBomb() {
+	bombs++;
+}

@@ -46,7 +46,8 @@ public:
 	list<Tile*> tiles;
 
 	Actor* backgroundLifes;
-
+	Actor* backgroundBombs;
+	Text* textBombs;
 	Audio* audioBackground;
 
 	void loadMap(string name);
@@ -57,4 +58,7 @@ public:
 	Space* space;
 
 	void endGame();
+	void generateRandomBomb(int x, int y);
+	list<Bomb*> bombs;
+	
 };

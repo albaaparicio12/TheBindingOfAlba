@@ -12,16 +12,17 @@ void GameLayer::init() {
 	
 	background = new Background("res/mapa1.png", WIDTH * 0.5, HEIGHT * 0.5, game);
 	backgroundLifes = new Actor("res/corazon6.png", WIDTH * 0.1, HEIGHT * 0.05, 76, 22, game);
+	backgroundBombs = new Actor("res/bombIcon.png", WIDTH * 0.05, HEIGHT * 0.15, 22, 19, game);
+	textBombs = new Text("0", WIDTH * 0.1, HEIGHT * 0.15, game);
 
 	audioBackground = new Audio("res/musica_ambiente.mp3", true);
 	audioBackground->play();
 
 	projectiles.clear();
 	projectilesEnemy.clear();
-
+	bombs.clear();
 	enemies.clear(); 
-	loadMap("res/0.txt");
-
+	loadMap("res/" + to_string(game->currentLevel) + ".txt");
 }
 
 void GameLayer::processControls() {
@@ -163,6 +164,8 @@ void GameLayer::update() {
 	list<Enemy*> deleteEnemies;
 	list<Projectile*> deleteProjectiles;
 	list<ProjectileEnemy*> deleteProjectilesEnemy;
+	list<Bomb*> deleteBombs;
+
 
 	for (auto const& tile : tiles) {
 		for (auto const& projectile : projectilesEnemy) {
@@ -230,8 +233,23 @@ void GameLayer::update() {
 			if (!eInList) {
 				deleteEnemies.push_back(enemy);
 			}
+			generateRandomBomb(enemy->x, enemy->y);
 		}
 
+	}
+
+	for (auto const& bomb : bombs) {
+		if (bomb->isOverlap(player) && bomb->toExplode==false) {
+			bool eInList = std::find(deleteBombs.begin(),
+				deleteBombs.end(),
+				bomb) != deleteBombs.end();
+
+			if (!eInList) {
+				deleteBombs.push_back(bomb);
+			}
+			player->addBomb();
+			textBombs->content = to_string(player->bombs);
+		}
 	}
 
 	for (auto const& delEnemy : deleteEnemies) {
@@ -253,17 +271,29 @@ void GameLayer::update() {
 	}
 	deleteProjectilesEnemy.clear();
 
+	for (auto const& delBomb : deleteBombs) {
+		bombs.remove(delBomb);
+		space->removeDynamicActor(delBomb);
+	}
+	deleteBombs.clear();
+
 }
 
 void GameLayer::draw() {
 	background->draw();
 	backgroundLifes->draw();
+	backgroundBombs->draw();
+	textBombs->draw();
 	for (auto const& tile : tiles) {
 		tile->draw();
 	}
 
 	for (auto const& projectile : projectiles) {
 		projectile->draw();
+	}
+
+	for (auto const& bomb : bombs) {
+		bomb->draw();
 	}
 
 	player->draw();
@@ -331,7 +361,7 @@ void GameLayer::loadMapObject(char character, int x, int y)
 		break;
 	}
 	case 'R': {
-		Tile* rock = new Rock(x, y, game);
+		Tile* rock = new Rock(x, y,game->currentLevel, game);
 		rock->y = rock->y - rock->height / 2;
 		tiles.push_back(rock);
 		space->addStaticActor(rock);
@@ -356,4 +386,13 @@ void GameLayer::loadMapObject(char character, int x, int y)
 void GameLayer::endGame() {
 	init();
 	return;
+}
+
+void GameLayer::generateRandomBomb(int x, int y) {
+	int r = (rand() % 2) + 1;
+	if (r == 1) {
+		Bomb* bomb = new Bomb("res/bombReco.png", x, y, false, game);
+		bombs.push_back(bomb);
+		space->addDynamicActor(bomb);
+	}
 }

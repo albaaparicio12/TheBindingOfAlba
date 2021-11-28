@@ -4,6 +4,8 @@
 #include "Projectile.h"
 #include "Audio.h"
 #include "Animation.h" 
+#include <list>
+#include "Bomb.h"
 
 class Player : public Actor
 {
@@ -35,4 +37,7 @@ public:
 	int lives = 6;
 	int invulnerableTime = 0;
 	void getShoot();
+
+	int bombs = 0;
+	void addBomb();
 };
