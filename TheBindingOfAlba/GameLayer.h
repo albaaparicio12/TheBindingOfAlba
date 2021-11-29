@@ -15,6 +15,7 @@
 #include "Tile.h"
 #include "Door.h"
 #include "Rock.h"
+#include "Explosion.h"
 
 #include <fstream> // Leer ficheros
 #include <sstream> // Leer líneas / String
@@ -60,7 +61,7 @@ public:
 
 	void endGame();
 	void generateRandomBomb(int x, int y);
-	void explodeBomb();
+	void createExplosions(int x, int y);
 	list<Bomb*> bombs;
-	
+	list<Explosion*> explosions;
 };

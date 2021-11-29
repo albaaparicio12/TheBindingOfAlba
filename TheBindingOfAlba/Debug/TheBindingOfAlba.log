@@ -1,4 +1,2 @@
-﻿  Bomb.cpp
-C:\Users\uo269926\source\repos\albaaparicio12\TheBindingOfAlba\TheBindingOfAlba\Bomb.cpp(56,21): warning C4244: 'argumento': conversión de 'int' a 'float'; posible pérdida de datos
-C:\Users\uo269926\source\repos\albaaparicio12\TheBindingOfAlba\TheBindingOfAlba\Bomb.cpp(56,18): warning C4244: 'argumento': conversión de 'int' a 'float'; posible pérdida de datos
+﻿  Explosion.cpp
   TheBindingOfAlba.vcxproj -> C:\Users\uo269926\Source\Repos\albaaparicio12\TheBindingOfAlba\Debug\TheBindingOfAlba.exe

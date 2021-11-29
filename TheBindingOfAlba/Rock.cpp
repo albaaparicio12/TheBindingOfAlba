@@ -2,6 +2,7 @@
 
 Rock::Rock(float x, float y,int level, Game* game) :
 	Tile(randomImage(level), x, y, 42, 42, game) {
+	isDestructible = true;
 }
 
 string Rock::randomImage(int level) {

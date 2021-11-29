@@ -22,6 +22,7 @@ void GameLayer::init() {
 	projectilesEnemy.clear();
 	bombs.clear();
 	enemies.clear();
+	explosions.clear();
 	loadMap("res/" + to_string(game->currentLevel) + ".txt");
 }
 
@@ -49,6 +50,7 @@ void GameLayer::processControls() {
 			space->addDynamicActor(newBomb);
 			bombs.push_back(newBomb);
 			player->bombs = player->bombs - 1;
+			textBombs->content = to_string(player->bombs);
 			cout << "Bomb to explode" << endl;
 		}
 	}
@@ -171,6 +173,10 @@ void GameLayer::update() {
 		bomb->update();
 	}
 
+	for (auto const& ex : explosions) {
+		ex->update();
+	}
+
 	for (auto const& enemy : enemies) {
 		if (player->isOverlap(enemy)) {
 			player->getShoot();
@@ -187,7 +193,8 @@ void GameLayer::update() {
 	list<Projectile*> deleteProjectiles;
 	list<ProjectileEnemy*> deleteProjectilesEnemy;
 	list<Bomb*> deleteBombs;
-
+	list<Explosion*> deleteExplosions;
+	list<Tile*> deleteTiles;
 
 	for (auto const& tile : tiles) {
 		for (auto const& projectile : projectilesEnemy) {
@@ -283,6 +290,30 @@ void GameLayer::update() {
 			if (!eInList) {
 				deleteBombs.push_back(bomb);
 			}
+			createExplosions(bomb->x, bomb->y);
+		}
+	}
+
+	for (auto const& ex : explosions) {
+		if (ex->time == 0) {
+			bool eInList = std::find(deleteExplosions.begin(),
+				deleteExplosions.end(),
+				ex) != deleteExplosions.end();
+
+			if (!eInList) {
+				deleteExplosions.push_back(ex);
+			}
+		}
+		for (auto const& tile : tiles) {
+			if (ex->isOverlap(tile)) {
+				bool eInList = std::find(deleteTiles.begin(),
+					deleteTiles.end(),
+					tile) != deleteTiles.end();
+
+				if (!eInList) {
+					deleteTiles.push_back(tile);
+				}
+			}
 		}
 	}
 
@@ -311,6 +342,17 @@ void GameLayer::update() {
 	}
 	deleteBombs.clear();
 
+	for (auto const& delEx: deleteExplosions) {
+		explosions.remove(delEx);
+		space->removeStaticActor(delEx);
+	}
+	deleteExplosions.clear();
+
+	for (auto const& delTile : deleteTiles) {
+		tiles.remove(delTile);
+		space->removeStaticActor(delTile);
+	}
+	deleteTiles.clear();
 }
 
 void GameLayer::draw() {
@@ -429,4 +471,20 @@ void GameLayer::generateRandomBomb(int x, int y) {
 		bombs.push_back(bomb);
 		space->addDynamicActor(bomb);
 	}
+}
+
+void GameLayer::createExplosions(int x, int y) {
+	Explosion* exup = new Explosion(x, y+5, game);
+	Explosion* exdown = new Explosion(x, y-5, game);
+	Explosion* exleft = new Explosion(x-5, y, game);
+	Explosion* exright = new Explosion(x+5, y, game);
+
+	explosions.push_back(exup);
+	space->addStaticActor(exup);
+	explosions.push_back(exdown);
+	space->addStaticActor(exdown);
+	explosions.push_back(exleft);
+	space->addStaticActor(exleft);
+	explosions.push_back(exright);
+	space->addStaticActor(exright);
 }
