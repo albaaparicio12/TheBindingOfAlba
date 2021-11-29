@@ -39,6 +39,7 @@ public:
 	bool controlShoot = false;
 	int controlMoveY = 0;
 	int controlMoveX = 0;
+	bool controlBomb = false;
 
 	list<Enemy*> enemies;
 	list<Projectile*> projectiles;
@@ -59,6 +60,7 @@ public:
 
 	void endGame();
 	void generateRandomBomb(int x, int y);
+	void explodeBomb();
 	list<Bomb*> bombs;
 	
 };

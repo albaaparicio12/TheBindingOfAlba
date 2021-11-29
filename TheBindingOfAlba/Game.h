@@ -53,3 +53,9 @@ enum class Orientation {
 	UP,
 	DOWN
 };
+
+enum class StatesBomb {
+	IDLE,
+	EXPLODING,
+	DESTROYED
+};
