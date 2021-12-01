@@ -10,7 +10,7 @@ void GameLayer::init() {
 	space = new Space(0);
 	tiles.clear();
 
-	background = new Background("res/mapa1.png", WIDTH * 0.5, HEIGHT * 0.5, game);
+	background = new Background("res/mapa"+to_string(game->currentLevel)+".png", WIDTH * 0.5, HEIGHT * 0.5, game);
 	backgroundLifes = new Actor("res/corazon6.png", WIDTH * 0.1, HEIGHT * 0.05, 76, 22, game);
 	backgroundBombs = new Actor("res/bombIcon.png", WIDTH * 0.05, HEIGHT * 0.15, 22, 19, game);
 	textBombs = new Text("0", WIDTH * 0.1, HEIGHT * 0.15, game);
