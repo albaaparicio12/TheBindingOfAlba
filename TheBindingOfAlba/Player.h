@@ -40,4 +40,6 @@ public:
 
 	int bombs = 0;
 	void addBomb();
+
+	bool hasKey;
 };

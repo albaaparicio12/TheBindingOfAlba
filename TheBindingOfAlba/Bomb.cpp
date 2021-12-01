@@ -8,7 +8,7 @@ Bomb::Bomb(float x, float y,bool ex, Game* game) :
 	aBeforeExplode = new Animation("res/bombReco.png", 35, 38,
 		35, 38, 40, 1, false, game);
 	aExploding = new Animation("res/bomb_exploding.png", 38, 36,
-		267, 36, 7, 7, false, game);
+		266, 36, 4, 7, false, game);
 	
 	if (toExplode) {
 		animation = aBeforeExplode;

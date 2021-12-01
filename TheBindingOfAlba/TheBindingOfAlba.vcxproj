@@ -31,6 +31,8 @@
     <ClCompile Include="Explosion.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameLayer.cpp" />
+    <ClCompile Include="Key.cpp" />
+    <ClCompile Include="KeyRock.cpp" />
     <ClCompile Include="Layer.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Player.cpp" />
@@ -54,6 +56,8 @@
     <ClInclude Include="Explosion.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameLayer.h" />
+    <ClInclude Include="Key.h" />
+    <ClInclude Include="KeyRock.h" />
     <ClInclude Include="Layer.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Projectile.h" />

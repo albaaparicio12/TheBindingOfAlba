@@ -305,7 +305,7 @@ void GameLayer::update() {
 			}
 		}
 		for (auto const& tile : tiles) {
-			if (ex->isOverlap(tile)) {
+			if (ex->isOverlap(tile) && tile->isDestructible) {
 				bool eInList = std::find(deleteTiles.begin(),
 					deleteTiles.end(),
 					tile) != deleteTiles.end();
@@ -313,8 +313,24 @@ void GameLayer::update() {
 				if (!eInList) {
 					deleteTiles.push_back(tile);
 				}
+
+				if (tile->hasKey) {
+					key = new Key(tile->x,tile->y,game);
+					space->addDynamicActor(key);
+				}
 			}
 		}
+	}
+
+	if (key != NULL && player->isOverlap(key)) {
+		player->hasKey = true;
+		door->open();
+		space->removeDynamicActor(key);
+		key = NULL;
+	}
+
+	if (player->isOverlap(door) && door->isOpen) {
+		nextLevel();
 	}
 
 	for (auto const& delEnemy : deleteEnemies) {
@@ -371,7 +387,9 @@ void GameLayer::draw() {
 	for (auto const& bomb : bombs) {
 		bomb->draw();
 	}
-
+	door->draw();
+	if(key != NULL)
+		key->draw();
 	player->draw();
 	for (auto const& enemy : enemies) {
 		enemy->draw();
@@ -430,14 +448,20 @@ void GameLayer::loadMapObject(char character, int x, int y)
 		break;
 	}
 	case 'D': {
-		Tile* door = new Door(x, y, game);
+		door = new Door(x, y, game);
 		door->y = door->y - door->height / 2;
-		tiles.push_back(door);
 		space->addStaticActor(door);
 		break;
 	}
 	case 'R': {
 		Tile* rock = new Rock(x, y, game->currentLevel, game);
+		rock->y = rock->y - rock->height / 2;
+		tiles.push_back(rock);
+		space->addStaticActor(rock);
+		break;
+	}
+	case 'K': {
+		Tile* rock = new KeyRock(x, y, game->currentLevel, game);
 		rock->y = rock->y - rock->height / 2;
 		tiles.push_back(rock);
 		space->addStaticActor(rock);
@@ -487,4 +511,12 @@ void GameLayer::createExplosions(int x, int y) {
 	space->addStaticActor(exleft);
 	explosions.push_back(exright);
 	space->addStaticActor(exright);
+}
+
+void GameLayer::nextLevel() {
+	game->currentLevel++;
+	if (game->currentLevel > game->finalLevel) {
+		game->currentLevel = 1;
+	}
+	init();
 }

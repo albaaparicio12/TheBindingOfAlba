@@ -23,7 +23,7 @@ Player::Player(float x, float y, Game* game)
 		114, 35, 6, 3, true, game);
 
 	animation = aIdleRight;
-
+	hasKey = false;
 }
 
 void Player::update() {
