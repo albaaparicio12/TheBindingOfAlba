@@ -40,4 +40,6 @@ public:
 	void addBomb();
 
 	bool hasKey;
+
+	void addLife();
 };

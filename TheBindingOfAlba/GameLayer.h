@@ -19,6 +19,7 @@
 #include "KeyRock.h"
 #include "Key.h"
 #include "BackDoor.h"
+#include "Heart.h"
 
 #include <fstream> // Leer ficheros
 #include <sstream> // Leer líneas / String
@@ -59,18 +60,20 @@ public:
 	void loadMapObject(char character, int x, int y);
 	int mapWidth;
 
-
 	Space* space;
 
 	void endGame();
-	void generateRandomBomb(int x, int y);
+	bool generateRandomBomb(int x, int y);
 	void createExplosions(int x, int y);
 	list<Bomb*> bombs;
 	list<Explosion*> explosions;
 
 	Key* key;
 	list<Door*> doors;
-
+	
 	void nextLevel();
 	void backLevel();
+
+	bool generateRandomHeart(int x, int y);
+	list<Heart*> hearts;
 };

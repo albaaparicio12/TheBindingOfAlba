@@ -148,3 +148,7 @@ void Player::getShoot() {
 void Player::addBomb() {
 	bombs++;
 }
+
+void Player::addLife() {
+	lives++;
+}

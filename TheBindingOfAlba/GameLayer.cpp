@@ -210,6 +210,7 @@ void GameLayer::update() {
 	list<Bomb*> deleteBombs;
 	list<Explosion*> deleteExplosions;
 	list<Tile*> deleteTiles;
+	list<Heart*> deleteHearts;
 
 	for (auto const& tile : tiles) {
 		for (auto const& projectile : projectilesEnemy) {
@@ -277,7 +278,10 @@ void GameLayer::update() {
 			if (!eInList) {
 				deleteEnemies.push_back(enemy);
 			}
-			generateRandomBomb(enemy->x, enemy->y);
+			if (generateRandomBomb(enemy->x, enemy->y))
+				generateRandomHeart(enemy->x + 10, enemy->y);
+			else
+				generateRandomHeart(enemy->x, enemy->y);
 		}
 
 	}
@@ -336,6 +340,7 @@ void GameLayer::update() {
 			}
 		}
 	}
+
 	for (auto const& door : doors) {
 		bool abrir = false;
 		if (key != NULL && player->isOverlap(key)) {
@@ -348,6 +353,22 @@ void GameLayer::update() {
 			door->open();
 	}
 
+	for (auto const& heart : hearts) {
+		if (player->isOverlap(heart)) {
+			if (player->lives < 6) {
+				player->addLife();
+				backgroundLifes->changeTexture("res/corazon" + to_string(player->lives) + ".png");
+			}
+			bool eInList = std::find(deleteHearts.begin(),
+				deleteHearts.end(),
+				heart) != deleteHearts.end();
+
+			if (!eInList) {
+				deleteHearts.push_back(heart);
+			}
+		}
+		
+	}
 		for (auto const& delEnemy : deleteEnemies) {
 			enemies.remove(delEnemy);
 			space->removeDynamicActor(delEnemy);
@@ -384,6 +405,12 @@ void GameLayer::update() {
 			space->removeStaticActor(delTile);
 		}
 		deleteTiles.clear();
+
+		for (auto const& delHeart : deleteHearts) {
+			hearts.remove(delHeart);
+			space->removeDynamicActor(delHeart);
+		}
+		deleteHearts.clear();
 	}
 
 	void GameLayer::draw() {
@@ -401,6 +428,10 @@ void GameLayer::update() {
 
 		for (auto const& bomb : bombs) {
 			bomb->draw();
+		}
+
+		for (auto const& heart : hearts) {
+			heart->draw();
 		}
 
 		for (auto const& door : doors) {
@@ -517,13 +548,24 @@ void GameLayer::endGame() {
 	return;
 }
 
-void GameLayer::generateRandomBomb(int x, int y) {
+bool GameLayer::generateRandomBomb(int x, int y) {
 	int r = (rand() % 2) + 1;
 	if (r == 1) {
 		Bomb* bomb = new Bomb("res/bombReco.png", x, y, false, game);
 		bombs.push_back(bomb);
 		space->addDynamicActor(bomb);
-	}
+		return true;
+	}return false;
+}
+
+bool GameLayer::generateRandomHeart(int x, int y) {
+	int r = (rand() % 3) + 1;
+	if (r == 1) {
+		Heart* heart = new Heart(x, y, game);
+		hearts.push_back(heart);
+		space->addDynamicActor(heart);
+		return true;
+	}return false;
 }
 
 void GameLayer::createExplosions(int x, int y) {
