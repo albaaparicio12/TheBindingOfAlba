@@ -239,6 +239,17 @@ void GameLayer::update() {
 					deleteProjectilesEnemy.push_back(projectile);
 				}
 			}
+			for (auto const& door : doors) {
+				if (door->isOverlap(projectile)) {
+					bool pInList = std::find(deleteProjectilesEnemy.begin(),
+						deleteProjectilesEnemy.end(),
+						projectile) != deleteProjectilesEnemy.end();
+
+					if (!pInList) {
+						deleteProjectilesEnemy.push_back(projectile);
+					}
+				}
+			}
 		}
 	}
 
@@ -251,6 +262,17 @@ void GameLayer::update() {
 
 				if (!pInList) {
 					deleteProjectiles.push_back(projectile);
+				}
+			}
+			for (auto const& door : doors) {
+				if (door->isOverlap(projectile)) {
+					bool pInList = std::find(deleteProjectiles.begin(),
+						deleteProjectiles.end(),
+						projectile) != deleteProjectiles.end();
+
+					if (!pInList) {
+						deleteProjectiles.push_back(projectile);
+					}
 				}
 			}
 		}

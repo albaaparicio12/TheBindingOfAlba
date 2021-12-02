@@ -1,27 +1,38 @@
-﻿  Player.cpp
+﻿  GameLayer.cpp
 C:\Users\Home\Source\Repos\TheBindingOfAlba\TheBindingOfAlba\Audio.h(7,10): warning C4067: símbolos (token) inesperados después de la directiva del preprocesador; se esperaba una nueva línea
-C:\Users\Home\Source\Repos\TheBindingOfAlba\TheBindingOfAlba\Player.cpp(8,58): warning C4244: 'argumento': conversión de 'int' a 'float'; posible pérdida de datos
-C:\Users\Home\Source\Repos\TheBindingOfAlba\TheBindingOfAlba\Player.cpp(8,51): warning C4244: 'argumento': conversión de 'int' a 'float'; posible pérdida de datos
-C:\Users\Home\Source\Repos\TheBindingOfAlba\TheBindingOfAlba\Player.cpp(10,56): warning C4244: 'argumento': conversión de 'int' a 'float'; posible pérdida de datos
-C:\Users\Home\Source\Repos\TheBindingOfAlba\TheBindingOfAlba\Player.cpp(10,49): warning C4244: 'argumento': conversión de 'int' a 'float'; posible pérdida de datos
-C:\Users\Home\Source\Repos\TheBindingOfAlba\TheBindingOfAlba\Player.cpp(12,59): warning C4244: 'argumento': conversión de 'int' a 'float'; posible pérdida de datos
-C:\Users\Home\Source\Repos\TheBindingOfAlba\TheBindingOfAlba\Player.cpp(12,52): warning C4244: 'argumento': conversión de 'int' a 'float'; posible pérdida de datos
-C:\Users\Home\Source\Repos\TheBindingOfAlba\TheBindingOfAlba\Player.cpp(14,61): warning C4244: 'argumento': conversión de 'int' a 'float'; posible pérdida de datos
-C:\Users\Home\Source\Repos\TheBindingOfAlba\TheBindingOfAlba\Player.cpp(14,54): warning C4244: 'argumento': conversión de 'int' a 'float'; posible pérdida de datos
-C:\Users\Home\Source\Repos\TheBindingOfAlba\TheBindingOfAlba\Player.cpp(16,52): warning C4244: 'argumento': conversión de 'int' a 'float'; posible pérdida de datos
-C:\Users\Home\Source\Repos\TheBindingOfAlba\TheBindingOfAlba\Player.cpp(16,45): warning C4244: 'argumento': conversión de 'int' a 'float'; posible pérdida de datos
-C:\Users\Home\Source\Repos\TheBindingOfAlba\TheBindingOfAlba\Player.cpp(18,56): warning C4244: 'argumento': conversión de 'int' a 'float'; posible pérdida de datos
-C:\Users\Home\Source\Repos\TheBindingOfAlba\TheBindingOfAlba\Player.cpp(18,49): warning C4244: 'argumento': conversión de 'int' a 'float'; posible pérdida de datos
-C:\Users\Home\Source\Repos\TheBindingOfAlba\TheBindingOfAlba\Player.cpp(20,55): warning C4244: 'argumento': conversión de 'int' a 'float'; posible pérdida de datos
-C:\Users\Home\Source\Repos\TheBindingOfAlba\TheBindingOfAlba\Player.cpp(20,48): warning C4244: 'argumento': conversión de 'int' a 'float'; posible pérdida de datos
-C:\Users\Home\Source\Repos\TheBindingOfAlba\TheBindingOfAlba\Player.cpp(22,59): warning C4244: 'argumento': conversión de 'int' a 'float'; posible pérdida de datos
-C:\Users\Home\Source\Repos\TheBindingOfAlba\TheBindingOfAlba\Player.cpp(22,52): warning C4244: 'argumento': conversión de 'int' a 'float'; posible pérdida de datos
-C:\Users\Home\Source\Repos\TheBindingOfAlba\TheBindingOfAlba\Player.cpp(110,39): warning C4244: 'argumento': conversión de 'int' a 'float'; posible pérdida de datos
-C:\Users\Home\Source\Repos\TheBindingOfAlba\TheBindingOfAlba\Player.cpp(110,36): warning C4244: 'argumento': conversión de 'int' a 'float'; posible pérdida de datos
-C:\Users\Home\Source\Repos\TheBindingOfAlba\TheBindingOfAlba\Player.cpp(134,27): warning C4244: 'argumento': conversión de 'int' a 'float'; posible pérdida de datos
-C:\Users\Home\Source\Repos\TheBindingOfAlba\TheBindingOfAlba\Player.cpp(134,24): warning C4244: 'argumento': conversión de 'int' a 'float'; posible pérdida de datos
-C:\Users\Home\Source\Repos\TheBindingOfAlba\TheBindingOfAlba\Player.cpp(144,22): warning C4244: 'argumento': conversión de 'int' a 'float'; posible pérdida de datos
-C:\Users\Home\Source\Repos\TheBindingOfAlba\TheBindingOfAlba\Player.cpp(144,19): warning C4244: 'argumento': conversión de 'int' a 'float'; posible pérdida de datos
-C:\Users\Home\Source\Repos\TheBindingOfAlba\TheBindingOfAlba\Player.cpp(148,23): warning C4244: 'argumento': conversión de 'int' a 'float'; posible pérdida de datos
-C:\Users\Home\Source\Repos\TheBindingOfAlba\TheBindingOfAlba\Player.cpp(148,20): warning C4244: 'argumento': conversión de 'int' a 'float'; posible pérdida de datos
+C:\Users\Home\Source\Repos\TheBindingOfAlba\TheBindingOfAlba\GameLayer.cpp(14,91): warning C4305: 'argumento': truncamiento de 'double' a 'float'
+C:\Users\Home\Source\Repos\TheBindingOfAlba\TheBindingOfAlba\GameLayer.cpp(15,92): warning C4305: 'argumento': truncamiento de 'double' a 'float'
+C:\Users\Home\Source\Repos\TheBindingOfAlba\TheBindingOfAlba\GameLayer.cpp(16,61): warning C4305: 'argumento': truncamiento de 'double' a 'float'
+C:\Users\Home\Source\Repos\TheBindingOfAlba\TheBindingOfAlba\GameLayer.cpp(361,33): warning C4244: 'argumento': conversión de 'int' a 'float'; posible pérdida de datos
+C:\Users\Home\Source\Repos\TheBindingOfAlba\TheBindingOfAlba\GameLayer.cpp(361,24): warning C4244: 'argumento': conversión de 'int' a 'float'; posible pérdida de datos
+C:\Users\Home\Source\Repos\TheBindingOfAlba\TheBindingOfAlba\GameLayer.cpp(498,14): warning C4244: 'inicializando': conversión de 'int' a 'float'; posible pérdida de datos
+C:\Users\Home\Source\Repos\TheBindingOfAlba\TheBindingOfAlba\GameLayer.cpp(499,14): warning C4244: 'inicializando': conversión de 'int' a 'float'; posible pérdida de datos
+C:\Users\Home\Source\Repos\TheBindingOfAlba\TheBindingOfAlba\GameLayer.cpp(500,34): warning C4244: 'argumento': conversión de 'float' a 'int'; posible pérdida de datos
+C:\Users\Home\Source\Repos\TheBindingOfAlba\TheBindingOfAlba\GameLayer.cpp(500,31): warning C4244: 'argumento': conversión de 'float' a 'int'; posible pérdida de datos
+C:\Users\Home\Source\Repos\TheBindingOfAlba\TheBindingOfAlba\GameLayer.cpp(513,37): warning C4244: 'argumento': conversión de 'int' a 'float'; posible pérdida de datos
+C:\Users\Home\Source\Repos\TheBindingOfAlba\TheBindingOfAlba\GameLayer.cpp(513,34): warning C4244: 'argumento': conversión de 'int' a 'float'; posible pérdida de datos
+C:\Users\Home\Source\Repos\TheBindingOfAlba\TheBindingOfAlba\GameLayer.cpp(520,39): warning C4244: 'argumento': conversión de 'int' a 'float'; posible pérdida de datos
+C:\Users\Home\Source\Repos\TheBindingOfAlba\TheBindingOfAlba\GameLayer.cpp(520,36): warning C4244: 'argumento': conversión de 'int' a 'float'; posible pérdida de datos
+C:\Users\Home\Source\Repos\TheBindingOfAlba\TheBindingOfAlba\GameLayer.cpp(527,29): warning C4244: 'argumento': conversión de 'int' a 'float'; posible pérdida de datos
+C:\Users\Home\Source\Repos\TheBindingOfAlba\TheBindingOfAlba\GameLayer.cpp(527,26): warning C4244: 'argumento': conversión de 'int' a 'float'; posible pérdida de datos
+C:\Users\Home\Source\Repos\TheBindingOfAlba\TheBindingOfAlba\GameLayer.cpp(534,33): warning C4244: 'argumento': conversión de 'int' a 'float'; posible pérdida de datos
+C:\Users\Home\Source\Repos\TheBindingOfAlba\TheBindingOfAlba\GameLayer.cpp(534,30): warning C4244: 'argumento': conversión de 'int' a 'float'; posible pérdida de datos
+C:\Users\Home\Source\Repos\TheBindingOfAlba\TheBindingOfAlba\GameLayer.cpp(541,29): warning C4244: 'argumento': conversión de 'int' a 'float'; posible pérdida de datos
+C:\Users\Home\Source\Repos\TheBindingOfAlba\TheBindingOfAlba\GameLayer.cpp(541,26): warning C4244: 'argumento': conversión de 'int' a 'float'; posible pérdida de datos
+C:\Users\Home\Source\Repos\TheBindingOfAlba\TheBindingOfAlba\GameLayer.cpp(548,32): warning C4244: 'argumento': conversión de 'int' a 'float'; posible pérdida de datos
+C:\Users\Home\Source\Repos\TheBindingOfAlba\TheBindingOfAlba\GameLayer.cpp(548,29): warning C4244: 'argumento': conversión de 'int' a 'float'; posible pérdida de datos
+C:\Users\Home\Source\Repos\TheBindingOfAlba\TheBindingOfAlba\GameLayer.cpp(555,27): warning C4244: 'argumento': conversión de 'int' a 'float'; posible pérdida de datos
+C:\Users\Home\Source\Repos\TheBindingOfAlba\TheBindingOfAlba\GameLayer.cpp(555,24): warning C4244: 'argumento': conversión de 'int' a 'float'; posible pérdida de datos
+C:\Users\Home\Source\Repos\TheBindingOfAlba\TheBindingOfAlba\GameLayer.cpp(578,48): warning C4244: 'argumento': conversión de 'int' a 'float'; posible pérdida de datos
+C:\Users\Home\Source\Repos\TheBindingOfAlba\TheBindingOfAlba\GameLayer.cpp(578,45): warning C4244: 'argumento': conversión de 'int' a 'float'; posible pérdida de datos
+C:\Users\Home\Source\Repos\TheBindingOfAlba\TheBindingOfAlba\GameLayer.cpp(588,31): warning C4244: 'argumento': conversión de 'int' a 'float'; posible pérdida de datos
+C:\Users\Home\Source\Repos\TheBindingOfAlba\TheBindingOfAlba\GameLayer.cpp(588,28): warning C4244: 'argumento': conversión de 'int' a 'float'; posible pérdida de datos
+C:\Users\Home\Source\Repos\TheBindingOfAlba\TheBindingOfAlba\GameLayer.cpp(596,38): warning C4244: 'argumento': conversión de 'int' a 'float'; posible pérdida de datos
+C:\Users\Home\Source\Repos\TheBindingOfAlba\TheBindingOfAlba\GameLayer.cpp(596,34): warning C4244: 'argumento': conversión de 'int' a 'float'; posible pérdida de datos
+C:\Users\Home\Source\Repos\TheBindingOfAlba\TheBindingOfAlba\GameLayer.cpp(597,40): warning C4244: 'argumento': conversión de 'int' a 'float'; posible pérdida de datos
+C:\Users\Home\Source\Repos\TheBindingOfAlba\TheBindingOfAlba\GameLayer.cpp(597,36): warning C4244: 'argumento': conversión de 'int' a 'float'; posible pérdida de datos
+C:\Users\Home\Source\Repos\TheBindingOfAlba\TheBindingOfAlba\GameLayer.cpp(598,41): warning C4244: 'argumento': conversión de 'int' a 'float'; posible pérdida de datos
+C:\Users\Home\Source\Repos\TheBindingOfAlba\TheBindingOfAlba\GameLayer.cpp(598,37): warning C4244: 'argumento': conversión de 'int' a 'float'; posible pérdida de datos
+C:\Users\Home\Source\Repos\TheBindingOfAlba\TheBindingOfAlba\GameLayer.cpp(599,42): warning C4244: 'argumento': conversión de 'int' a 'float'; posible pérdida de datos
+C:\Users\Home\Source\Repos\TheBindingOfAlba\TheBindingOfAlba\GameLayer.cpp(599,38): warning C4244: 'argumento': conversión de 'int' a 'float'; posible pérdida de datos
   TheBindingOfAlba.vcxproj -> C:\Users\Home\Source\Repos\TheBindingOfAlba\Debug\TheBindingOfAlba.exe
