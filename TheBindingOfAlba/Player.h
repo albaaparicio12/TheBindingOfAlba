@@ -4,6 +4,8 @@
 #include "Projectile.h"
 #include "Audio.h"
 #include "Animation.h" 
+#include <list>
+#include "Bomb.h"
 
 class Player : public Actor
 {
@@ -25,8 +27,6 @@ public:
 	Animation* aIdleDown;
 	Animation* aRunningUp;
 	Animation* aRunningDown;
-	Animation* aShootingRight;
-	Animation* aShootingLeft;
 	Animation* animation;
 	
 	Orientation orientation = Orientation::RIGHT;
@@ -35,4 +35,13 @@ public:
 	int lives = 6;
 	int invulnerableTime = 0;
 	void getShoot();
+
+	int bombs = 0;
+	void addBomb();
+	Bomb* putBomb();
+	int bombCadence = 30;
+	int bombTime = 0;
+	bool hasKey;
+
+	void addLife();
 };

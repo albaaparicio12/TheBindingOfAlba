@@ -3,25 +3,31 @@
 GameLayer::GameLayer(Game* game)
 	: Layer(game) {
 	//llama al constructor del padre : Layer(renderer)
+	
 	init();
+
+	audioBackground = new Audio("res/musica_ambiente.mp3", true);
+	audioBackground->play();
 }
 
 void GameLayer::init() {
 	space = new Space(0);
 	tiles.clear();
-	
-	background = new Background("res/mapa1.png", WIDTH * 0.5, HEIGHT * 0.5, game);
-	backgroundLifes = new Actor("res/corazon6.png", WIDTH * 0.1, HEIGHT * 0.05, 76, 22, game);
-
-	audioBackground = new Audio("res/musica_ambiente.mp3", true);
-	audioBackground->play();
-
 	projectiles.clear();
 	projectilesEnemy.clear();
+	bombs.clear();
+	enemies.clear();
+	explosions.clear();
+	doors.clear();
 
-	enemies.clear(); 
-	loadMap("res/0.txt");
+	loadMap("res/" + to_string(game->currentLevel) + ".txt");
 
+	background = new Background("res/mapa"+to_string(game->currentLevel)+".png", WIDTH * 0.5, HEIGHT * 0.5, game);
+	backgroundLifes = new Actor("res/corazon" + to_string(player->lives) + ".png", WIDTH * 0.1, HEIGHT * 0.05, 76, 22, game);
+	backgroundBombs = new Actor("res/bombIcon.png", WIDTH * 0.05, HEIGHT * 0.15, 22, 19, game);
+	textBombs = new Text(to_string(player->bombs), WIDTH * 0.1, HEIGHT * 0.15, game);
+
+	
 }
 
 void GameLayer::processControls() {
@@ -39,7 +45,20 @@ void GameLayer::processControls() {
 			projectiles.push_back(newProjectile);
 			cout << "Proyectile" << endl;
 		}
-		
+
+	}
+
+	if (controlBomb) {
+		if (player->bombs > 0) {
+			Bomb* newBomb = player->putBomb();
+			if (newBomb != NULL) {
+				space->addDynamicActor(newBomb);
+				bombs.push_back(newBomb);
+				player->bombs = player->bombs - 1;
+				textBombs->content = to_string(player->bombs);
+				cout << "Bomb to explode" << endl;
+			}
+		}
 	}
 	// Eje X
 	if (controlMoveX > 0) {
@@ -95,6 +114,9 @@ void GameLayer::keysToControls(SDL_Event event) {
 		case SDLK_SPACE: // dispara
 			controlShoot = true;
 			break;
+		case SDLK_b: // bomba
+			controlBomb = true;
+			break;
 		}
 	}
 	if (event.type == SDL_KEYUP) {
@@ -124,16 +146,35 @@ void GameLayer::keysToControls(SDL_Event event) {
 		case SDLK_SPACE: // dispara
 			controlShoot = false;
 			break;
+
+		case SDLK_b: // bomba
+			controlBomb = false;
+			break;
 		}
+
 	}
 }
 
 void GameLayer::update() {
 	space->update();
 	player->update();
+
+	for (auto const& door : doors) {
+		if (player->isOverlap(door) && door->isOpen) {
+			if (door->isToNextLevel) {
+				nextLevel();
+				break;
+			}
+			else {
+				backLevel();
+				break;
+			}
+		}
+	}
+
 	for (auto const& enemy : enemies) {
 		enemy->update();
-		enemy->changeDirection(player->x, player->y);		
+		enemy->changeDirection(player->x, player->y);
 		ProjectileEnemy* newProjectile = enemy->shoot(player->x, player->y);
 		if (newProjectile != NULL) {
 			projectilesEnemy.push_back(newProjectile);
@@ -148,6 +189,14 @@ void GameLayer::update() {
 		projectile->update();
 	}
 
+	for (auto const& bomb : bombs) {
+		bomb->update();
+	}
+
+	for (auto const& ex : explosions) {
+		ex->update();
+	}
+
 	for (auto const& enemy : enemies) {
 		if (player->isOverlap(enemy)) {
 			player->getShoot();
@@ -155,7 +204,7 @@ void GameLayer::update() {
 				init();
 				return;
 			}
-			backgroundLifes->changeTexture("res/corazon"+to_string(player->lives)+".png");
+			backgroundLifes->changeTexture("res/corazon" + to_string(player->lives) + ".png");
 		}
 	}
 	// Colisiones , Enemy - Projectile
@@ -163,6 +212,10 @@ void GameLayer::update() {
 	list<Enemy*> deleteEnemies;
 	list<Projectile*> deleteProjectiles;
 	list<ProjectileEnemy*> deleteProjectilesEnemy;
+	list<Bomb*> deleteBombs;
+	list<Explosion*> deleteExplosions;
+	list<Tile*> deleteTiles;
+	list<Heart*> deleteHearts;
 
 	for (auto const& tile : tiles) {
 		for (auto const& projectile : projectilesEnemy) {
@@ -189,9 +242,20 @@ void GameLayer::update() {
 					deleteProjectilesEnemy.push_back(projectile);
 				}
 			}
+			for (auto const& door : doors) {
+				if (door->isOverlap(projectile)) {
+					bool pInList = std::find(deleteProjectilesEnemy.begin(),
+						deleteProjectilesEnemy.end(),
+						projectile) != deleteProjectilesEnemy.end();
+
+					if (!pInList) {
+						deleteProjectilesEnemy.push_back(projectile);
+					}
+				}
+			}
 		}
 	}
-	
+
 	for (auto const& tile : tiles) {
 		for (auto const& projectile : projectiles) {
 			if (tile->isOverlap(projectile)) {
@@ -201,6 +265,17 @@ void GameLayer::update() {
 
 				if (!pInList) {
 					deleteProjectiles.push_back(projectile);
+				}
+			}
+			for (auto const& door : doors) {
+				if (door->isOverlap(projectile)) {
+					bool pInList = std::find(deleteProjectiles.begin(),
+						deleteProjectiles.end(),
+						projectile) != deleteProjectiles.end();
+
+					if (!pInList) {
+						deleteProjectiles.push_back(projectile);
+					}
 				}
 			}
 		}
@@ -230,130 +305,327 @@ void GameLayer::update() {
 			if (!eInList) {
 				deleteEnemies.push_back(enemy);
 			}
+			if (generateRandomBomb(enemy->x, enemy->y))
+				generateRandomHeart(enemy->x + 10, enemy->y);
+			else
+				generateRandomHeart(enemy->x, enemy->y);
 		}
 
 	}
 
-	for (auto const& delEnemy : deleteEnemies) {
-		enemies.remove(delEnemy);
-		space->removeDynamicActor(delEnemy);
-		killedEnemies++;
-	}
-	deleteEnemies.clear();
+	for (auto const& bomb : bombs) {
+		if (bomb->isOverlap(player) && bomb->toExplode == false) {
+			bool eInList = std::find(deleteBombs.begin(),
+				deleteBombs.end(),
+				bomb) != deleteBombs.end();
 
-	for (auto const& delProjectile : deleteProjectiles) {
-		projectiles.remove(delProjectile);
-		space->removeDynamicActor(delProjectile);
-	}
-	deleteProjectiles.clear();
-
-	for (auto const& delProjectile : deleteProjectilesEnemy) {
-		projectilesEnemy.remove(delProjectile);
-		space->removeDynamicActor(delProjectile);
-	}
-	deleteProjectilesEnemy.clear();
-
-}
-
-void GameLayer::draw() {
-	background->draw();
-	backgroundLifes->draw();
-	for (auto const& tile : tiles) {
-		tile->draw();
-	}
-
-	for (auto const& projectile : projectiles) {
-		projectile->draw();
-	}
-
-	player->draw();
-	for (auto const& enemy : enemies) {
-		enemy->draw();
-	}
-
-	for (auto const& projectileEnemie : projectilesEnemy) {
-		projectileEnemie->draw();
-	}
-
-	SDL_RenderPresent(game->renderer);
-}
-
-void GameLayer::loadMap(string name) {
-	char character;
-	string line;
-	ifstream streamFile(name.c_str());
-	if (!streamFile.is_open()) {
-		cout << "Falla abrir el fichero de mapa" << endl;
-		return;
-	}
-	else {
-		// Por línea
-		for (int i = 0; getline(streamFile, line); i++) {
-			istringstream streamLine(line);
-			mapWidth = line.length() * 40; // Ancho del mapa en pixels
-			// Por carácter (en cada línea)
-			for (int j = 0; !streamLine.eof(); j++) {
-				streamLine >> character; // Leer character 
-				cout << character;
-				float x = 40 / 2 + j * 40; // x central
-				float y = 32 + i * 32; // y suelo
-				loadMapObject(character, x, y);
+			if (!eInList) {
+				deleteBombs.push_back(bomb);
 			}
-
-			cout << character << endl;
+			player->addBomb();
+			textBombs->content = to_string(player->bombs);
 		}
 	}
-	streamFile.close();
-}
 
-void GameLayer::loadMapObject(char character, int x, int y)
-{
-	switch (character) {
-	case 'E': {
-		Enemy* enemy = new EnemyChase(x, y, game);
-		enemy->y = enemy->y - enemy->height / 2;
-		enemies.push_back(enemy);
-		space->addDynamicActor(enemy);
-		break;
+	for (auto const& bomb : bombs) {
+		if (bomb->state == StatesBomb::DESTROYED) {
+			bool eInList = std::find(deleteBombs.begin(),
+				deleteBombs.end(),
+				bomb) != deleteBombs.end();
+
+			if (!eInList) {
+				deleteBombs.push_back(bomb);
+			}
+			createExplosions(bomb->x, bomb->y);
+		}
 	}
-	case 'S': {
-		Enemy* enemy = new EnemyShooter(x, y, game);
-		enemy->y = enemy->y - enemy->height / 2;
-		enemies.push_back(enemy);
-		space->addDynamicActor(enemy);
-		break;
+
+	for (auto const& ex : explosions) {
+		if (ex->time == 0) {
+			bool eInList = std::find(deleteExplosions.begin(),
+				deleteExplosions.end(),
+				ex) != deleteExplosions.end();
+
+			if (!eInList) {
+				deleteExplosions.push_back(ex);
+			}
+		}
+		for (auto const& tile : tiles) {
+			if (ex->isOverlap(tile) && tile->isDestructible) {
+				bool eInList = std::find(deleteTiles.begin(),
+					deleteTiles.end(),
+					tile) != deleteTiles.end();
+
+				if (!eInList) {
+					deleteTiles.push_back(tile);
+				}
+
+				if (tile->hasKey) {
+					key = new Key(tile->x, tile->y, game);
+					space->addDynamicActor(key);
+				}
+			}
+		}
 	}
-	case 'D': {
-		Tile* door = new Door(x, y, game);
-		door->y = door->y - door->height / 2;
-		tiles.push_back(door);
-		space->addStaticActor(door);
-		break;
+
+	for (auto const& door : doors) {
+		bool abrir = false;
+		if (key != NULL && player->isOverlap(key)) {
+			player->hasKey = true;
+			abrir = true;
+			space->removeDynamicActor(key);
+			key = NULL;
+		}
+		if (abrir && door->isToNextLevel)
+			door->open();
 	}
-	case 'R': {
-		Tile* rock = new Rock(x, y, game);
-		rock->y = rock->y - rock->height / 2;
-		tiles.push_back(rock);
-		space->addStaticActor(rock);
-		break;
+
+	for (auto const& heart : hearts) {
+		if (player->isOverlap(heart)) {
+			if (player->lives < 6) {
+				player->addLife();
+				backgroundLifes->changeTexture("res/corazon" + to_string(player->lives) + ".png");
+			}
+			bool eInList = std::find(deleteHearts.begin(),
+				deleteHearts.end(),
+				heart) != deleteHearts.end();
+
+			if (!eInList) {
+				deleteHearts.push_back(heart);
+			}
+		}
+		
 	}
-	case '1': {
-		player = new Player(x, y, game);
-		player->y = player->y - player->height / 2;
-		space->addDynamicActor(player);
-		break;
+		for (auto const& delEnemy : deleteEnemies) {
+			enemies.remove(delEnemy);
+			space->removeDynamicActor(delEnemy);
+			killedEnemies++;
+		}
+		deleteEnemies.clear();
+
+		for (auto const& delProjectile : deleteProjectiles) {
+			projectiles.remove(delProjectile);
+			space->removeDynamicActor(delProjectile);
+		}
+		deleteProjectiles.clear();
+
+		for (auto const& delProjectile : deleteProjectilesEnemy) {
+			projectilesEnemy.remove(delProjectile);
+			space->removeDynamicActor(delProjectile);
+		}
+		deleteProjectilesEnemy.clear();
+
+		for (auto const& delBomb : deleteBombs) {
+			bombs.remove(delBomb);
+			space->removeDynamicActor(delBomb);
+		}
+		deleteBombs.clear();
+
+		for (auto const& delEx : deleteExplosions) {
+			explosions.remove(delEx);
+			space->removeStaticActor(delEx);
+		}
+		deleteExplosions.clear();
+
+		for (auto const& delTile : deleteTiles) {
+			tiles.remove(delTile);
+			space->removeStaticActor(delTile);
+		}
+		deleteTiles.clear();
+
+		for (auto const& delHeart : deleteHearts) {
+			hearts.remove(delHeart);
+			space->removeDynamicActor(delHeart);
+		}
+		deleteHearts.clear();
 	}
-	case '#': {
-		Tile* tile = new Tile("", x, y, game);
-		tile->y = tile->y - tile->height / 2;
-		tiles.push_back(tile);
-		space->addStaticActor(tile);
-		break;
+
+	void GameLayer::draw() {
+		background->draw();
+		backgroundLifes->draw();
+		backgroundBombs->draw();
+		textBombs->draw();
+		for (auto const& tile : tiles) {
+			tile->draw();
+		}
+
+		for (auto const& projectile : projectiles) {
+			projectile->draw();
+		}
+
+		for (auto const& bomb : bombs) {
+			bomb->draw();
+		}
+
+		for (auto const& heart : hearts) {
+			heart->draw();
+		}
+
+		for (auto const& door : doors) {
+			door->draw();
+		}
+
+		if (key != NULL)
+			key->draw();
+
+		player->draw();
+		for (auto const& enemy : enemies) {
+			enemy->draw();
+		}
+
+		for (auto const& projectileEnemie : projectilesEnemy) {
+			projectileEnemie->draw();
+		}
+
+		SDL_RenderPresent(game->renderer);
 	}
+
+
+	void GameLayer::loadMap(string name) {
+		char character;
+		string line;
+		ifstream streamFile(name.c_str());
+		if (!streamFile.is_open()) {
+			cout << "Falla abrir el fichero de mapa" << endl;
+			return;
+		}
+		else {
+			// Por línea
+			for (int i = 0; getline(streamFile, line); i++) {
+				istringstream streamLine(line);
+				mapWidth = line.length() * 40; // Ancho del mapa en pixels
+				// Por carácter (en cada línea)
+				for (int j = 0; !streamLine.eof(); j++) {
+					streamLine >> character; // Leer character 
+					cout << character;
+					float x = 40 / 2 + j * 40; // x central
+					float y = 32 + i * 32; // y suelo
+					loadMapObject(character, x, y);
+				}
+
+				cout << character << endl;
+			}
+		}
+		streamFile.close();
 	}
-}
+
+	void GameLayer::loadMapObject(char character, int x, int y)
+	{
+		switch (character) {
+		case 'E': {
+			Enemy* enemy = new EnemyChase(x, y, game);
+			enemy->y = enemy->y - enemy->height / 2;
+			enemies.push_back(enemy);
+			space->addDynamicActor(enemy);
+			break;
+		}
+		case 'S': {
+			Enemy* enemy = new EnemyShooter(x, y, game);
+			enemy->y = enemy->y - enemy->height / 2;
+			enemies.push_back(enemy);
+			space->addDynamicActor(enemy);
+			break;
+		}
+		case 'D': {
+			Door* door = new Door(x, y, game);
+			door->y = door->y - door->height / 2;
+			doors.push_back(door);
+			space->addStaticActor(door);
+			break;
+		}
+		case 'B': {
+			Door* door = new BackDoor(x, y, game);
+			door->y = door->y - door->height / 2;
+			doors.push_back(door);
+			space->addStaticActor(door);
+			break;
+		}
+		case 'R': {
+			Tile* rock = new Rock(x, y, game->currentLevel, game);
+			rock->y = rock->y - rock->height / 2;
+			tiles.push_back(rock);
+			space->addStaticActor(rock);
+			break;
+		}
+		case 'K': {
+			Tile* rock = new KeyRock(x, y, game->currentLevel, game);
+			rock->y = rock->y - rock->height / 2;
+			tiles.push_back(rock);
+			space->addStaticActor(rock);
+			break;
+		}
+		case '1': {
+			if (player == NULL) {
+				player = new Player(x, y, game);
+			}
+			space->addDynamicActor(player);
+			player->x = x;
+			player->y = y;
+			break;
+		}
+		case '#': {
+			Tile* tile = new Tile("", x, y, game);
+			tile->y = tile->y - tile->height / 2;
+			tiles.push_back(tile);
+			space->addStaticActor(tile);
+			break;
+		}
+		}
+	}
 
 void GameLayer::endGame() {
 	init();
 	return;
+}
+
+bool GameLayer::generateRandomBomb(int x, int y) {
+	int r = (rand() % 2) + 1;
+	if (r == 1) {
+		Bomb* bomb = new Bomb("res/bombReco.png", x, y, false, game);
+		bombs.push_back(bomb);
+		space->addDynamicActor(bomb);
+		return true;
+	}return false;
+}
+
+bool GameLayer::generateRandomHeart(int x, int y) {
+	int r = (rand() % 3) + 1;
+	if (r == 1) {
+		Heart* heart = new Heart(x, y, game);
+		hearts.push_back(heart);
+		space->addDynamicActor(heart);
+		return true;
+	}return false;
+}
+
+void GameLayer::createExplosions(int x, int y) {
+	Explosion* exup = new Explosion(x, y+5, game);
+	Explosion* exdown = new Explosion(x, y-5, game);
+	Explosion* exleft = new Explosion(x-5, y, game);
+	Explosion* exright = new Explosion(x+5, y, game);
+
+	explosions.push_back(exup);
+	space->addStaticActor(exup);
+	explosions.push_back(exdown);
+	space->addStaticActor(exdown);
+	explosions.push_back(exleft);
+	space->addStaticActor(exleft);
+	explosions.push_back(exright);
+	space->addStaticActor(exright);
+}
+
+void GameLayer::nextLevel() {
+	game->currentLevel++;
+	if (game->currentLevel > game->finalLevel) {
+		game->currentLevel = 1;
+	}
+	init();
+}
+
+void GameLayer::backLevel() {
+	game->currentLevel--;
+	if (game->currentLevel < 1) {
+		game->currentLevel = 1;
+	}
+	init();
 }

@@ -1,7 +1,7 @@
 #include "Player.h"
 
 Player::Player(float x, float y, Game* game)
-	: Actor("res/jugador.png", x, y, 38, 35, game) {
+	: Actor("res/idle_down.png", x, y, 38, 35, game) {
 
 	audioShoot = new Audio("res/efecto_disparo.wav", false);
 
@@ -23,7 +23,7 @@ Player::Player(float x, float y, Game* game)
 		114, 35, 6, 3, true, game);
 
 	animation = aIdleRight;
-
+	hasKey = false;
 }
 
 void Player::update() {
@@ -40,6 +40,9 @@ void Player::update() {
 	if (shootTime > 0) {
 		shootTime--;
 	}
+
+	if (bombTime > 0)
+		bombTime--;
 
 	//Update orientation
 	if (vx > 0) {
@@ -125,6 +128,17 @@ Projectile* Player::shoot() {
 
 }
 
+Bomb* Player::putBomb() {
+	if (bombTime == 0) {
+		bombTime = bombCadence;
+		auto bomb = new Bomb(x, y,true, game);
+		return bomb;
+	}
+	else {
+		return NULL;
+	}
+}
+
 void Player::draw() {
 	if (invulnerableTime == 0) {
 		animation->draw(x, y);
@@ -143,4 +157,12 @@ void Player::getShoot() {
 			invulnerableTime = 50;
 		}
 	}
+}
+
+void Player::addBomb() {
+	bombs++;
+}
+
+void Player::addLife() {
+	lives++;
 }
