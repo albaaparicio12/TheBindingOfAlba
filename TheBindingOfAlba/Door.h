@@ -8,6 +8,7 @@ public:
 	Door(float x, float y, Game* game);
 	Door(string filename, float x, float y, Game* game);
 	bool isOpen;
+	bool isToNextLevel;
 	void open();
 };
 

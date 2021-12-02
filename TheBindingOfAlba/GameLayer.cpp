@@ -23,6 +23,7 @@ void GameLayer::init() {
 	bombs.clear();
 	enemies.clear();
 	explosions.clear();
+	doors.clear();
 	loadMap("res/" + to_string(game->currentLevel) + ".txt");
 }
 
@@ -152,6 +153,20 @@ void GameLayer::keysToControls(SDL_Event event) {
 void GameLayer::update() {
 	space->update();
 	player->update();
+
+	for (auto const& door : doors) {
+		if (player->isOverlap(door) && door->isOpen) {
+			if (door->isToNextLevel) {
+				nextLevel();
+				break;
+			}
+			else {
+				backLevel();
+				break;
+			}
+		}
+	}
+
 	for (auto const& enemy : enemies) {
 		enemy->update();
 		enemy->changeDirection(player->x, player->y);
@@ -315,173 +330,187 @@ void GameLayer::update() {
 				}
 
 				if (tile->hasKey) {
-					key = new Key(tile->x,tile->y,game);
+					key = new Key(tile->x, tile->y, game);
 					space->addDynamicActor(key);
 				}
 			}
 		}
 	}
-
-	if (key != NULL && player->isOverlap(key)) {
-		player->hasKey = true;
-		door->open();
-		space->removeDynamicActor(key);
-		key = NULL;
+	for (auto const& door : doors) {
+		bool abrir = false;
+		if (key != NULL && player->isOverlap(key)) {
+			player->hasKey = true;
+			abrir = true;
+			space->removeDynamicActor(key);
+			key = NULL;
+		}
+		if (abrir && door->isToNextLevel)
+			door->open();
 	}
 
-	if (player->isOverlap(door) && door->isOpen) {
-		nextLevel();
+		for (auto const& delEnemy : deleteEnemies) {
+			enemies.remove(delEnemy);
+			space->removeDynamicActor(delEnemy);
+			killedEnemies++;
+		}
+		deleteEnemies.clear();
+
+		for (auto const& delProjectile : deleteProjectiles) {
+			projectiles.remove(delProjectile);
+			space->removeDynamicActor(delProjectile);
+		}
+		deleteProjectiles.clear();
+
+		for (auto const& delProjectile : deleteProjectilesEnemy) {
+			projectilesEnemy.remove(delProjectile);
+			space->removeDynamicActor(delProjectile);
+		}
+		deleteProjectilesEnemy.clear();
+
+		for (auto const& delBomb : deleteBombs) {
+			bombs.remove(delBomb);
+			space->removeDynamicActor(delBomb);
+		}
+		deleteBombs.clear();
+
+		for (auto const& delEx : deleteExplosions) {
+			explosions.remove(delEx);
+			space->removeStaticActor(delEx);
+		}
+		deleteExplosions.clear();
+
+		for (auto const& delTile : deleteTiles) {
+			tiles.remove(delTile);
+			space->removeStaticActor(delTile);
+		}
+		deleteTiles.clear();
 	}
 
-	for (auto const& delEnemy : deleteEnemies) {
-		enemies.remove(delEnemy);
-		space->removeDynamicActor(delEnemy);
-		killedEnemies++;
-	}
-	deleteEnemies.clear();
+	void GameLayer::draw() {
+		background->draw();
+		backgroundLifes->draw();
+		backgroundBombs->draw();
+		textBombs->draw();
+		for (auto const& tile : tiles) {
+			tile->draw();
+		}
 
-	for (auto const& delProjectile : deleteProjectiles) {
-		projectiles.remove(delProjectile);
-		space->removeDynamicActor(delProjectile);
-	}
-	deleteProjectiles.clear();
+		for (auto const& projectile : projectiles) {
+			projectile->draw();
+		}
 
-	for (auto const& delProjectile : deleteProjectilesEnemy) {
-		projectilesEnemy.remove(delProjectile);
-		space->removeDynamicActor(delProjectile);
-	}
-	deleteProjectilesEnemy.clear();
+		for (auto const& bomb : bombs) {
+			bomb->draw();
+		}
 
-	for (auto const& delBomb : deleteBombs) {
-		bombs.remove(delBomb);
-		space->removeDynamicActor(delBomb);
-	}
-	deleteBombs.clear();
+		for (auto const& door : doors) {
+			door->draw();
+		}
 
-	for (auto const& delEx: deleteExplosions) {
-		explosions.remove(delEx);
-		space->removeStaticActor(delEx);
-	}
-	deleteExplosions.clear();
+		if (key != NULL)
+			key->draw();
 
-	for (auto const& delTile : deleteTiles) {
-		tiles.remove(delTile);
-		space->removeStaticActor(delTile);
-	}
-	deleteTiles.clear();
-}
+		player->draw();
+		for (auto const& enemy : enemies) {
+			enemy->draw();
+		}
 
-void GameLayer::draw() {
-	background->draw();
-	backgroundLifes->draw();
-	backgroundBombs->draw();
-	textBombs->draw();
-	for (auto const& tile : tiles) {
-		tile->draw();
+		for (auto const& projectileEnemie : projectilesEnemy) {
+			projectileEnemie->draw();
+		}
+
+		SDL_RenderPresent(game->renderer);
 	}
 
-	for (auto const& projectile : projectiles) {
-		projectile->draw();
-	}
 
-	for (auto const& bomb : bombs) {
-		bomb->draw();
-	}
-	door->draw();
-	if(key != NULL)
-		key->draw();
-	player->draw();
-	for (auto const& enemy : enemies) {
-		enemy->draw();
-	}
+	void GameLayer::loadMap(string name) {
+		char character;
+		string line;
+		ifstream streamFile(name.c_str());
+		if (!streamFile.is_open()) {
+			cout << "Falla abrir el fichero de mapa" << endl;
+			return;
+		}
+		else {
+			// Por línea
+			for (int i = 0; getline(streamFile, line); i++) {
+				istringstream streamLine(line);
+				mapWidth = line.length() * 40; // Ancho del mapa en pixels
+				// Por carácter (en cada línea)
+				for (int j = 0; !streamLine.eof(); j++) {
+					streamLine >> character; // Leer character 
+					cout << character;
+					float x = 40 / 2 + j * 40; // x central
+					float y = 32 + i * 32; // y suelo
+					loadMapObject(character, x, y);
+				}
 
-	for (auto const& projectileEnemie : projectilesEnemy) {
-		projectileEnemie->draw();
-	}
-
-	SDL_RenderPresent(game->renderer);
-}
-
-void GameLayer::loadMap(string name) {
-	char character;
-	string line;
-	ifstream streamFile(name.c_str());
-	if (!streamFile.is_open()) {
-		cout << "Falla abrir el fichero de mapa" << endl;
-		return;
-	}
-	else {
-		// Por línea
-		for (int i = 0; getline(streamFile, line); i++) {
-			istringstream streamLine(line);
-			mapWidth = line.length() * 40; // Ancho del mapa en pixels
-			// Por carácter (en cada línea)
-			for (int j = 0; !streamLine.eof(); j++) {
-				streamLine >> character; // Leer character 
-				cout << character;
-				float x = 40 / 2 + j * 40; // x central
-				float y = 32 + i * 32; // y suelo
-				loadMapObject(character, x, y);
+				cout << character << endl;
 			}
+		}
+		streamFile.close();
+	}
 
-			cout << character << endl;
+	void GameLayer::loadMapObject(char character, int x, int y)
+	{
+		switch (character) {
+		case 'E': {
+			Enemy* enemy = new EnemyChase(x, y, game);
+			enemy->y = enemy->y - enemy->height / 2;
+			enemies.push_back(enemy);
+			space->addDynamicActor(enemy);
+			break;
+		}
+		case 'S': {
+			Enemy* enemy = new EnemyShooter(x, y, game);
+			enemy->y = enemy->y - enemy->height / 2;
+			enemies.push_back(enemy);
+			space->addDynamicActor(enemy);
+			break;
+		}
+		case 'D': {
+			Door* door = new Door(x, y, game);
+			door->y = door->y - door->height / 2;
+			doors.push_back(door);
+			space->addStaticActor(door);
+			break;
+		}
+		case 'B': {
+			Door* door = new BackDoor(x, y, game);
+			door->y = door->y - door->height / 2;
+			doors.push_back(door);
+			space->addStaticActor(door);
+			break;
+		}
+		case 'R': {
+			Tile* rock = new Rock(x, y, game->currentLevel, game);
+			rock->y = rock->y - rock->height / 2;
+			tiles.push_back(rock);
+			space->addStaticActor(rock);
+			break;
+		}
+		case 'K': {
+			Tile* rock = new KeyRock(x, y, game->currentLevel, game);
+			rock->y = rock->y - rock->height / 2;
+			tiles.push_back(rock);
+			space->addStaticActor(rock);
+			break;
+		}
+		case '1': {
+			player = new Player(x, y, game);
+			player->y = player->y - player->height / 2;
+			space->addDynamicActor(player);
+			break;
+		}
+		case '#': {
+			Tile* tile = new Tile("", x, y, game);
+			tile->y = tile->y - tile->height / 2;
+			tiles.push_back(tile);
+			space->addStaticActor(tile);
+			break;
+		}
 		}
 	}
-	streamFile.close();
-}
-
-void GameLayer::loadMapObject(char character, int x, int y)
-{
-	switch (character) {
-	case 'E': {
-		Enemy* enemy = new EnemyChase(x, y, game);
-		enemy->y = enemy->y - enemy->height / 2;
-		enemies.push_back(enemy);
-		space->addDynamicActor(enemy);
-		break;
-	}
-	case 'S': {
-		Enemy* enemy = new EnemyShooter(x, y, game);
-		enemy->y = enemy->y - enemy->height / 2;
-		enemies.push_back(enemy);
-		space->addDynamicActor(enemy);
-		break;
-	}
-	case 'D': {
-		door = new Door(x, y, game);
-		door->y = door->y - door->height / 2;
-		space->addStaticActor(door);
-		break;
-	}
-	case 'R': {
-		Tile* rock = new Rock(x, y, game->currentLevel, game);
-		rock->y = rock->y - rock->height / 2;
-		tiles.push_back(rock);
-		space->addStaticActor(rock);
-		break;
-	}
-	case 'K': {
-		Tile* rock = new KeyRock(x, y, game->currentLevel, game);
-		rock->y = rock->y - rock->height / 2;
-		tiles.push_back(rock);
-		space->addStaticActor(rock);
-		break;
-	}
-	case '1': {
-		player = new Player(x, y, game);
-		player->y = player->y - player->height / 2;
-		space->addDynamicActor(player);
-		break;
-	}
-	case '#': {
-		Tile* tile = new Tile("", x, y, game);
-		tile->y = tile->y - tile->height / 2;
-		tiles.push_back(tile);
-		space->addStaticActor(tile);
-		break;
-	}
-	}
-}
 
 void GameLayer::endGame() {
 	init();
@@ -516,6 +545,14 @@ void GameLayer::createExplosions(int x, int y) {
 void GameLayer::nextLevel() {
 	game->currentLevel++;
 	if (game->currentLevel > game->finalLevel) {
+		game->currentLevel = 1;
+	}
+	init();
+}
+
+void GameLayer::backLevel() {
+	game->currentLevel--;
+	if (game->currentLevel < 1) {
 		game->currentLevel = 1;
 	}
 	init();

@@ -13,6 +13,24 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Archivos de encabezado\Enemies">
+      <UniqueIdentifier>{da03ee43-121f-4d61-b3e8-2609c0eacfeb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de origen\Enemies">
+      <UniqueIdentifier>{679526d5-c347-4224-98fc-82d98943f890}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de origen\Objects">
+      <UniqueIdentifier>{1900e817-4585-4d2f-9379-e43176136ed8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Objects">
+      <UniqueIdentifier>{ceeb8e51-48d2-4db0-8e41-76e7a69530fb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de origen\Layers">
+      <UniqueIdentifier>{f39c11af-5700-4a72-9633-659c17c90a59}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Layers">
+      <UniqueIdentifier>{28a803a0-563e-4ee5-86d2-813b33866426}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Actor.cpp">
@@ -27,25 +45,13 @@
     <ClCompile Include="Background.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
-    <ClCompile Include="Enemy.cpp">
-      <Filter>Archivos de origen</Filter>
-    </ClCompile>
     <ClCompile Include="Game.cpp">
-      <Filter>Archivos de origen</Filter>
-    </ClCompile>
-    <ClCompile Include="GameLayer.cpp">
-      <Filter>Archivos de origen</Filter>
-    </ClCompile>
-    <ClCompile Include="Layer.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
     <ClCompile Include="Main.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
     <ClCompile Include="Player.cpp">
-      <Filter>Archivos de origen</Filter>
-    </ClCompile>
-    <ClCompile Include="Projectile.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
     <ClCompile Include="Space.cpp">
@@ -57,32 +63,47 @@
     <ClCompile Include="Tile.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
-    <ClCompile Include="EnemyShooter.cpp">
-      <Filter>Archivos de origen</Filter>
-    </ClCompile>
-    <ClCompile Include="EnemyChase.cpp">
-      <Filter>Archivos de origen</Filter>
-    </ClCompile>
-    <ClCompile Include="ProjectileEnemy.cpp">
-      <Filter>Archivos de origen</Filter>
-    </ClCompile>
     <ClCompile Include="Door.cpp">
-      <Filter>Archivos de origen</Filter>
-    </ClCompile>
-    <ClCompile Include="Rock.cpp">
-      <Filter>Archivos de origen</Filter>
-    </ClCompile>
-    <ClCompile Include="Bomb.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
     <ClCompile Include="Explosion.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
-    <ClCompile Include="Key.cpp">
+    <ClCompile Include="BackDoor.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
+    <ClCompile Include="EnemyChase.cpp">
+      <Filter>Archivos de origen\Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="Enemy.cpp">
+      <Filter>Archivos de origen\Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyShooter.cpp">
+      <Filter>Archivos de origen\Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="Key.cpp">
+      <Filter>Archivos de origen\Objects</Filter>
+    </ClCompile>
     <ClCompile Include="KeyRock.cpp">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Archivos de origen\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Projectile.cpp">
+      <Filter>Archivos de origen\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="ProjectileEnemy.cpp">
+      <Filter>Archivos de origen\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Rock.cpp">
+      <Filter>Archivos de origen\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Bomb.cpp">
+      <Filter>Archivos de origen\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="GameLayer.cpp">
+      <Filter>Archivos de origen\Layers</Filter>
+    </ClCompile>
+    <ClCompile Include="Layer.cpp">
+      <Filter>Archivos de origen\Layers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -98,22 +119,10 @@
     <ClInclude Include="Background.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
-    <ClInclude Include="Enemy.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
     <ClInclude Include="Game.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
-    <ClInclude Include="GameLayer.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="Layer.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
     <ClInclude Include="Player.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="Projectile.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
     <ClInclude Include="Space.h">
@@ -125,32 +134,47 @@
     <ClInclude Include="Tile.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
-    <ClInclude Include="EnemyShooter.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="EnemyChase.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="ProjectileEnemy.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
     <ClInclude Include="Door.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="Rock.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="Bomb.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
     <ClInclude Include="Explosion.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
-    <ClInclude Include="Key.h">
+    <ClInclude Include="BackDoor.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
+    <ClInclude Include="Enemy.h">
+      <Filter>Archivos de encabezado\Enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyChase.h">
+      <Filter>Archivos de encabezado\Enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyShooter.h">
+      <Filter>Archivos de encabezado\Enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="Bomb.h">
+      <Filter>Archivos de encabezado\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Key.h">
+      <Filter>Archivos de encabezado\Objects</Filter>
+    </ClInclude>
     <ClInclude Include="KeyRock.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Archivos de encabezado\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Rock.h">
+      <Filter>Archivos de encabezado\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Projectile.h">
+      <Filter>Archivos de encabezado\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="ProjectileEnemy.h">
+      <Filter>Archivos de encabezado\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="GameLayer.h">
+      <Filter>Archivos de encabezado\Layers</Filter>
+    </ClInclude>
+    <ClInclude Include="Layer.h">
+      <Filter>Archivos de encabezado\Layers</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

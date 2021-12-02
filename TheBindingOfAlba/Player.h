@@ -27,8 +27,6 @@ public:
 	Animation* aIdleDown;
 	Animation* aRunningUp;
 	Animation* aRunningDown;
-	Animation* aShootingRight;
-	Animation* aShootingLeft;
 	Animation* animation;
 	
 	Orientation orientation = Orientation::RIGHT;

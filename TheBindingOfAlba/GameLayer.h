@@ -18,6 +18,7 @@
 #include "Explosion.h"
 #include "KeyRock.h"
 #include "Key.h"
+#include "BackDoor.h"
 
 #include <fstream> // Leer ficheros
 #include <sstream> // Leer líneas / String
@@ -68,7 +69,8 @@ public:
 	list<Explosion*> explosions;
 
 	Key* key;
-	Door* door;
+	list<Door*> doors;
 
 	void nextLevel();
+	void backLevel();
 };
