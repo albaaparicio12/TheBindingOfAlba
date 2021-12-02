@@ -39,35 +39,35 @@ ProjectileEnemy* EnemyShooter::shoot(int xPlayer, int yPlayer) {
 		shootTime = shootCadence;
 		auto projectile = new ProjectileEnemy(x, y, game);
 		if (x - xPlayer > 10)
-			projectile->vx = -4;
+			projectile->vx = -5;
 
 		else if (x - xPlayer < -10)
-			projectile->vx = 4;
+			projectile->vx = 5;
 
 		if (y -yPlayer > 10)
-			projectile->vy = -4;
+			projectile->vy = -5;
 
 		else if (y - yPlayer < -10)
-			projectile->vy = 4;
+			projectile->vy = 5;
 
 		if (x - xPlayer <= 10 && x - xPlayer >= -10)  {
 			if (y > yPlayer) {
-				projectile->vy = -4;
+				projectile->vy = -5;
 				projectile->vx = 0;
 			}
 			else {
-				projectile->vy = 4;
+				projectile->vy = 5;
 				projectile->vx = 0;
 			}
 		}		
 		if (y - yPlayer <= 10 && y - yPlayer >= -10)  {
 			if (x < xPlayer) {
 				projectile->vy = 0;
-				projectile->vx = 4;
+				projectile->vx = 5;
 			}
 			else {
 				projectile->vy = 0;
-				projectile->vx = -4;
+				projectile->vx = -5;
 			}
 		}
 		return projectile;

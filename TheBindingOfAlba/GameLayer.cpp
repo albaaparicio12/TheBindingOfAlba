@@ -19,6 +19,7 @@ void GameLayer::init() {
 	enemies.clear();
 	explosions.clear();
 	doors.clear();
+	hearts.clear();
 
 	loadMap("res/" + to_string(game->currentLevel) + ".txt");
 
@@ -27,7 +28,6 @@ void GameLayer::init() {
 	backgroundBombs = new Actor("res/bombIcon.png", WIDTH * 0.05, HEIGHT * 0.15, 22, 19, game);
 	textBombs = new Text(to_string(player->bombs), WIDTH * 0.1, HEIGHT * 0.15, game);
 
-	
 }
 
 void GameLayer::processControls() {
@@ -201,7 +201,7 @@ void GameLayer::update() {
 		if (player->isOverlap(enemy)) {
 			player->getShoot();
 			if (player->lives <= 0) {
-				init();
+				endGame();
 				return;
 			}
 			backgroundLifes->changeTexture("res/corazon" + to_string(player->lives) + ".png");
@@ -230,6 +230,7 @@ void GameLayer::update() {
 				player->getShoot();
 				if (player->lives == 0) {
 					endGame();
+					return;
 				}
 				backgroundLifes->changeTexture("res/corazon" + to_string(player->lives) + ".png");
 			}
@@ -574,8 +575,9 @@ void GameLayer::update() {
 	}
 
 void GameLayer::endGame() {
+	game->currentLevel = 1;
+	player = NULL;
 	init();
-	return;
 }
 
 bool GameLayer::generateRandomBomb(int x, int y) {

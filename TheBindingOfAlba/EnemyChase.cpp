@@ -3,7 +3,7 @@
 EnemyChase::EnemyChase(float x, float y, Game* game)
 	: Enemy("res/spider.png", x, y, 32, 32, game) {
 
-	vx = 1;
+	vx = 2;
 
 	state = States::IDLE;
 
@@ -32,13 +32,19 @@ void EnemyChase::update() {
 
 void EnemyChase::changeDirection(int x, int y) {
 	if (this->x > x)
-		vx = -1;
+		vx = -2;
 	else if (this->x < x)
-		vx = 1;
+		vx = 2;
 	if (this->y > y)
-		vy = -1;
+		vy = -2;
 	else if (this->y < y)
-		vy = 1;
+		vy = 2;
+	if(this->y == y){
+		vy = 0;
+	}
+	if (this->x == x) {
+		vx = 0;
+	}
 }
 
 ProjectileEnemy* EnemyChase::shoot(int xPlayer, int yPlayer) {
