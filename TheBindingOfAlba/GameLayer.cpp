@@ -3,28 +3,31 @@
 GameLayer::GameLayer(Game* game)
 	: Layer(game) {
 	//llama al constructor del padre : Layer(renderer)
+	
 	init();
+
+	audioBackground = new Audio("res/musica_ambiente.mp3", true);
+	audioBackground->play();
 }
 
 void GameLayer::init() {
 	space = new Space(0);
 	tiles.clear();
-
-	background = new Background("res/mapa"+to_string(game->currentLevel)+".png", WIDTH * 0.5, HEIGHT * 0.5, game);
-	backgroundLifes = new Actor("res/corazon6.png", WIDTH * 0.1, HEIGHT * 0.05, 76, 22, game);
-	backgroundBombs = new Actor("res/bombIcon.png", WIDTH * 0.05, HEIGHT * 0.15, 22, 19, game);
-	textBombs = new Text("0", WIDTH * 0.1, HEIGHT * 0.15, game);
-
-	audioBackground = new Audio("res/musica_ambiente.mp3", true);
-	audioBackground->play();
-
 	projectiles.clear();
 	projectilesEnemy.clear();
 	bombs.clear();
 	enemies.clear();
 	explosions.clear();
 	doors.clear();
+
 	loadMap("res/" + to_string(game->currentLevel) + ".txt");
+
+	background = new Background("res/mapa"+to_string(game->currentLevel)+".png", WIDTH * 0.5, HEIGHT * 0.5, game);
+	backgroundLifes = new Actor("res/corazon" + to_string(player->lives) + ".png", WIDTH * 0.1, HEIGHT * 0.05, 76, 22, game);
+	backgroundBombs = new Actor("res/bombIcon.png", WIDTH * 0.05, HEIGHT * 0.15, 22, 19, game);
+	textBombs = new Text(to_string(player->bombs), WIDTH * 0.1, HEIGHT * 0.15, game);
+
+	
 }
 
 void GameLayer::processControls() {
@@ -552,9 +555,12 @@ void GameLayer::update() {
 			break;
 		}
 		case '1': {
-			player = new Player(x, y, game);
-			player->y = player->y - player->height / 2;
+			if (player == NULL) {
+				player = new Player(x, y, game);
+			}
 			space->addDynamicActor(player);
+			player->x = x;
+			player->y = y;
 			break;
 		}
 		case '#': {

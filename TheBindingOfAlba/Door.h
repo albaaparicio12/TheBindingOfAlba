@@ -1,6 +1,7 @@
 #pragma once
 #include "Game.h"
 #include "Tile.h"
+#include "Audio.h"
 
 class Door : public Tile
 {
@@ -10,5 +11,6 @@ public:
 	bool isOpen;
 	bool isToNextLevel;
 	void open();
+	Audio* audioOpen;
 };
 
