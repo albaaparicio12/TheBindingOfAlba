@@ -38,7 +38,9 @@ public:
 
 	int bombs = 0;
 	void addBomb();
-
+	Bomb* putBomb();
+	int bombCadence = 30;
+	int bombTime = 0;
 	bool hasKey;
 
 	void addLife();

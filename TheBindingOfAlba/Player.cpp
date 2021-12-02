@@ -41,6 +41,9 @@ void Player::update() {
 		shootTime--;
 	}
 
+	if (bombTime > 0)
+		bombTime--;
+
 	//Update orientation
 	if (vx > 0) {
 		orientation = Orientation::RIGHT;
@@ -123,6 +126,17 @@ Projectile* Player::shoot() {
 		return NULL;
 	}
 
+}
+
+Bomb* Player::putBomb() {
+	if (bombTime == 0) {
+		bombTime = bombCadence;
+		auto bomb = new Bomb(x, y,true, game);
+		return bomb;
+	}
+	else {
+		return NULL;
+	}
 }
 
 void Player::draw() {

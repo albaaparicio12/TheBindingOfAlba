@@ -47,12 +47,14 @@ void GameLayer::processControls() {
 
 	if (controlBomb) {
 		if (player->bombs > 0) {
-			Bomb* newBomb = new Bomb(player->x, player->y, true, game);
-			space->addDynamicActor(newBomb);
-			bombs.push_back(newBomb);
-			player->bombs = player->bombs - 1;
-			textBombs->content = to_string(player->bombs);
-			cout << "Bomb to explode" << endl;
+			Bomb* newBomb = player->putBomb();
+			if (newBomb != NULL) {
+				space->addDynamicActor(newBomb);
+				bombs.push_back(newBomb);
+				player->bombs = player->bombs - 1;
+				textBombs->content = to_string(player->bombs);
+				cout << "Bomb to explode" << endl;
+			}
 		}
 	}
 	// Eje X
