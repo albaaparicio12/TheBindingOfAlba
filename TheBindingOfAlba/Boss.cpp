@@ -1,27 +1,27 @@
-#include "EnemyShooter.h"
+#include "Boss.h"
 
-EnemyShooter::EnemyShooter(float x, float y, Game* game)
-	: Enemy("res/gusano_idle.png", x, y, 32, 32, game) {
 
-	vx = 0;
+Boss::Boss(float x, float y, Game* game)
+	: Enemy("res/boss.png", x, y, 60, 66, game) {
+
+	vx = 1;
 
 	state = States::IDLE;
 
-	aMoving = new Animation("res/gusano.png", width, height,
-		330, 32, 6, 10, true, game);
-	aDying = new Animation("res/gusano.png", width, height,
-		128, 32, 6, 4, false, game);
+	aDying = new Animation("res/boss2.png", width, height,
+		600, 66, 4, 10, false, game);
+	aMoving = new Animation("res/boss2.png", width, height,
+		600, 66, 4, 10, true, game);
 	animation = aMoving;
 
-	lifes = 2;
+	lifes = 25;
 }
 
-void EnemyShooter::update() {
+void Boss::update() {
 	if (invulnerableTime > 0) {
 		invulnerableTime--;
 	}
 	bool endAnimation = animation->update();
-	shootTime--;
 	if (endAnimation) {
 		if (state == States::DYING) {
 			state = States::DEAD;
@@ -35,10 +35,24 @@ void EnemyShooter::update() {
 	}
 }
 
-void EnemyShooter::changeDirection(int x, int y) {
+void Boss::changeDirection(int x, int y) {
+	if (this->x > x)
+		vx = -2;
+	else if (this->x < x)
+		vx = 2;
+	if (this->y > y)
+		vy = -2;
+	else if (this->y < y)
+		vy = 2;
+	if (this->y == y) {
+		vy = 0;
+	}
+	if (this->x == x) {
+		vx = 0;
+	}
 }
 
-ProjectileEnemy* EnemyShooter::shoot(int xPlayer, int yPlayer) {
+ProjectileEnemy* Boss::shoot(int xPlayer, int yPlayer) {
 	if (shootTime <= 0) {
 		shootTime = shootCadence;
 		auto projectile = new ProjectileEnemy(x, y, game);
@@ -48,13 +62,13 @@ ProjectileEnemy* EnemyShooter::shoot(int xPlayer, int yPlayer) {
 		else if (x - xPlayer < -10)
 			projectile->vx = 5;
 
-		if (y -yPlayer > 10)
+		if (y - yPlayer > 10)
 			projectile->vy = -5;
 
 		else if (y - yPlayer < -10)
 			projectile->vy = 5;
 
-		if (x - xPlayer <= 10 && x - xPlayer >= -10)  {
+		if (x - xPlayer <= 10 && x - xPlayer >= -10) {
 			if (y > yPlayer) {
 				projectile->vy = -5;
 				projectile->vx = 0;
@@ -63,8 +77,8 @@ ProjectileEnemy* EnemyShooter::shoot(int xPlayer, int yPlayer) {
 				projectile->vy = 5;
 				projectile->vx = 0;
 			}
-		}		
-		if (y - yPlayer <= 10 && y - yPlayer >= -10)  {
+		}
+		if (y - yPlayer <= 10 && y - yPlayer >= -10) {
 			if (x < xPlayer) {
 				projectile->vy = 0;
 				projectile->vx = 5;
@@ -80,3 +94,4 @@ ProjectileEnemy* EnemyShooter::shoot(int xPlayer, int yPlayer) {
 		return NULL;
 	}
 }
+

@@ -18,4 +18,7 @@ public:
 	Animation* aDying;
 	Animation* aMoving;
 	Animation* animation;
+
+	int lifes;
+	int invulnerableTime;
 };

@@ -5,11 +5,24 @@ Enemy::Enemy(string filename, float x, float y, int width, int height, Game* gam
 }
 
 void Enemy::draw() {
-	animation->draw(x, y);
+	if (invulnerableTime == 0) {
+		animation->draw(x, y);
+	}
+	else {
+		if (invulnerableTime % 10 >= 0 && invulnerableTime % 10 <= 5) {
+			animation->draw(x, y);
+		}
+	}
 }
 
 void Enemy::impacted() {
-	if (state != States::DYING) {
-		state = States::DYING;
-	}
+	if (invulnerableTime <= 0) {
+		lifes--;
+		invulnerableTime = 50;
+		if (lifes <= 0) {
+			if (state != States::DYING) 
+				state = States::DYING;			
+		}
+			
+	}	
 }

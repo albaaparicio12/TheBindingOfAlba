@@ -108,6 +108,9 @@
     <ClCompile Include="Heart.cpp">
       <Filter>Archivos de origen\Objects</Filter>
     </ClCompile>
+    <ClCompile Include="Boss.cpp">
+      <Filter>Archivos de origen\Enemies</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Actor.h">
@@ -181,6 +184,9 @@
     </ClInclude>
     <ClInclude Include="Heart.h">
       <Filter>Archivos de encabezado\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Boss.h">
+      <Filter>Archivos de encabezado\Enemies</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

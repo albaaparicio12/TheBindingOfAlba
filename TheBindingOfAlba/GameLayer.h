@@ -20,6 +20,7 @@
 #include "Key.h"
 #include "BackDoor.h"
 #include "Heart.h"
+#include "Boss.h"
 
 #include <fstream> // Leer ficheros
 #include <sstream> // Leer líneas / String

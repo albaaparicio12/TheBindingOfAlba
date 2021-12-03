@@ -527,6 +527,13 @@ void GameLayer::update() {
 			space->addDynamicActor(enemy);
 			break;
 		}
+		case 'J': {
+			Enemy* enemy = new Boss(x, y, game);
+			enemy->y = enemy->y - enemy->height / 2;
+			enemies.push_back(enemy);
+			space->addDynamicActor(enemy);
+			break;
+		}
 		case 'D': {
 			Door* door = new Door(x, y, game);
 			door->y = door->y - door->height / 2;

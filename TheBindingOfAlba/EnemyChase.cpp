@@ -13,9 +13,13 @@ EnemyChase::EnemyChase(float x, float y, Game* game)
 		128, 32, 6, 4, true, game);
 	animation = aMoving;
 
+	lifes = 1;
 }
 
 void EnemyChase::update() {
+	if (invulnerableTime > 0) {
+		invulnerableTime--;
+	}
 	bool endAnimation = animation->update();
 	if (endAnimation) {
 		if (state == States::DYING) {
@@ -50,3 +54,4 @@ void EnemyChase::changeDirection(int x, int y) {
 ProjectileEnemy* EnemyChase::shoot(int xPlayer, int yPlayer) {
 	return NULL;
 }
+
