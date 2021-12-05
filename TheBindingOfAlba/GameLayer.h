@@ -21,6 +21,7 @@
 #include "BackDoor.h"
 #include "Heart.h"
 #include "Boss.h"
+#include "Pad.h"
 
 #include <fstream> // Leer ficheros
 #include <sstream> // Leer líneas / String
@@ -77,4 +78,12 @@ public:
 
 	bool generateRandomHeart(int x, int y);
 	list<Heart*> hearts;
+
+	// Elementos de interfaz
+	Actor* buttonShoot;
+	Actor* buttonBomb;
+	void mouseToControls(SDL_Event event);
+	void gamePadToControls(SDL_Event event);
+	Pad* pad;
+	SDL_GameController* gamePad;
 };

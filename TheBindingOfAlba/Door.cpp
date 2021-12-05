@@ -6,6 +6,11 @@ Door::Door(float x, float y, Game* game) :
 	isToNextLevel = true;
 
 	audioOpen = new Audio("res/open_door.wav", false);
+
+	if (game->currentLevel == 0) {
+		isOpen = true;
+		changeTexture("res/puerta1Abierta.png");
+	}
 }
 
 Door::Door(string filename, float x, float y, Game* game) :
