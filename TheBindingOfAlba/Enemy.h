@@ -21,4 +21,6 @@ public:
 
 	int lifes;
 	int invulnerableTime;
+
+	bool isBoss = false;
 };

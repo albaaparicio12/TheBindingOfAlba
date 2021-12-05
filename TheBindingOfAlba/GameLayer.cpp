@@ -3,7 +3,7 @@
 GameLayer::GameLayer(Game* game)
 	: Layer(game) {
 	//llama al constructor del padre : Layer(renderer)
-	
+	gamePad = SDL_GameControllerOpen(0);
 	init();
 
 	audioBackground = new Audio("res/musica_ambiente.mp3", true);
@@ -22,8 +22,10 @@ void GameLayer::init() {
 	hearts.clear();
 
 	loadMap("res/" + to_string(game->currentLevel) + ".txt");
-
+	pad = new Pad(WIDTH * 0.15, HEIGHT * 0.80, game);
 	background = new Background("res/mapa"+to_string(game->currentLevel)+".png", WIDTH * 0.5, HEIGHT * 0.5, game);
+	buttonShoot = new Actor("res/boton_disparo.png", WIDTH*0.9, HEIGHT*0.55,100,100,game);
+	buttonBomb = new Actor("res/boton_bomba.png", WIDTH * 0.75, HEIGHT * 0.83, 100, 100, game);
 	backgroundLifes = new Actor("res/corazon" + to_string(player->lives) + ".png", WIDTH * 0.1, HEIGHT * 0.05, 76, 22, game);
 	backgroundBombs = new Actor("res/bombIcon.png", WIDTH * 0.05, HEIGHT * 0.15, 22, 19, game);
 	textBombs = new Text(to_string(player->bombs), WIDTH * 0.1, HEIGHT * 0.15, game);
@@ -34,7 +36,38 @@ void GameLayer::processControls() {
 	// obtener controles
 	SDL_Event event;
 	while (SDL_PollEvent(&event)) {
-		keysToControls(event);
+		if (event.type == SDL_CONTROLLERDEVICEADDED) {
+			gamePad = SDL_GameControllerOpen(0);
+			if (gamePad == NULL) {
+				cout << "error en GamePad" << endl;
+			}
+			else {
+				cout << "GamePad conectado" << endl;
+			}
+		}
+		// Cambio automático de input
+		 // PONER el GamePad
+		if (event.type == SDL_CONTROLLERBUTTONDOWN || event.type == SDL_CONTROLLERAXISMOTION) {
+			game->input = game->inputGamePad;
+		}
+		if (event.type == SDL_KEYDOWN) {
+			game->input = game->inputKeyboard;
+		}
+		if (event.type == SDL_MOUSEBUTTONDOWN) {
+			game->input = game->inputMouse;
+		}
+		// Procesar Mando
+		if (game->input == game->inputGamePad) {  // gamePAD
+			gamePadToControls(event);
+		}
+		// Procesar teclas
+		if (game->input == game->inputKeyboard) {
+			keysToControls(event);
+		}
+		if (game->input == game->inputMouse) {
+			mouseToControls(event);
+		}
+
 	}
 	//procesar controles
 	// Disparar
@@ -60,6 +93,12 @@ void GameLayer::processControls() {
 			}
 		}
 	}
+
+	if (controlContinue) {
+		pause = false;
+		controlContinue = false;
+	}
+
 	// Eje X
 	if (controlMoveX > 0) {
 		player->moveX(1);
@@ -155,7 +194,73 @@ void GameLayer::keysToControls(SDL_Event event) {
 	}
 }
 
+void GameLayer::mouseToControls(SDL_Event event) {
+	// Modificación de coordenadas por posible escalado
+	float motionX = event.motion.x / game->scaleLower;
+	float motionY = event.motion.y / game->scaleLower;
+	// Cada vez que hacen click
+	if (event.type == SDL_MOUSEBUTTONDOWN) {
+		controlContinue = true;
+		if (pad->containsPoint(motionX, motionY)) {
+			pad->clicked = true;
+			// CLICK TAMBIEN TE MUEVE
+			controlMoveX = pad->getOrientationX(motionX);
+			controlMoveY = pad->getOrientationY(motionY);
+		}
+		if (buttonShoot->containsPoint(motionX, motionY)) {
+			controlShoot = true;
+		}
+		if (buttonBomb->containsPoint(motionX, motionY)) {
+			controlBomb = true;
+		}
+	}
+	// Cada vez que se mueve
+	if (event.type == SDL_MOUSEMOTION) {
+			if (pad->clicked && pad->containsPoint(motionX, motionY)) {
+				controlMoveX = pad->getOrientationX(motionX);
+				controlMoveY = pad->getOrientationY(motionY);
+				// Rango de -20 a 20 es igual que 0
+				if (controlMoveX > -20 && controlMoveX < 20) {
+					controlMoveX = 0;
+				}
+				if (controlMoveY > -20 && controlMoveY < 20) {
+					controlMoveY = 0;
+				}
+			}
+			else {
+				controlMoveX = 0;
+				controlMoveY = 0;
+				pad->clicked = false;
+			}
+		}
+		if (buttonShoot->containsPoint(motionX, motionY) == false) {
+			controlShoot = false;
+		}
+		if (buttonBomb->containsPoint(motionX, motionY) == false) {
+			controlBomb = false;
+		}
+	// Cada vez que levantan el click
+	if (event.type == SDL_MOUSEBUTTONUP) {
+		if (pad->containsPoint(motionX, motionY)) {
+			pad->clicked = false;
+			// LEVANTAR EL CLICK TAMBIEN TE PARA
+			controlMoveX = 0;
+			controlMoveY = 0;
+		}
+		if (buttonShoot->containsPoint(motionX, motionY)) {
+			controlShoot = false;
+		}
+		if (buttonBomb->containsPoint(motionX, motionY)) {
+			controlBomb = false;
+		}
+	}
+}
+
+
 void GameLayer::update() {
+	if (pause) {
+		return;
+	}
 	space->update();
 	player->update();
 
@@ -306,6 +411,10 @@ void GameLayer::update() {
 			if (!eInList) {
 				deleteEnemies.push_back(enemy);
 			}
+			if (enemy->isBoss) {
+				nextLevel();
+				return;
+			}
 			if (generateRandomBomb(enemy->x, enemy->y))
 				generateRandomHeart(enemy->x + 10, enemy->y);
 			else
@@ -368,9 +477,8 @@ void GameLayer::update() {
 			}
 		}
 	}
-
+	bool abrir = false;
 	for (auto const& door : doors) {
-		bool abrir = false;
 		if (key != NULL && player->isOverlap(key)) {
 			player->hasKey = true;
 			abrir = true;
@@ -478,6 +586,15 @@ void GameLayer::update() {
 			projectileEnemie->draw();
 		}
 
+		// HUD
+		if (game->input == game->inputMouse) {
+			buttonBomb->draw();
+			buttonShoot->draw(); 
+			pad->draw(); 
+		}
+		if (pause) {
+			message->draw();
+		}
 		SDL_RenderPresent(game->renderer);
 	}
 
@@ -582,7 +699,7 @@ void GameLayer::update() {
 	}
 
 void GameLayer::endGame() {
-	game->currentLevel = 1;
+	game->currentLevel = 0;
 	player = NULL;
 	init();
 }
@@ -626,15 +743,57 @@ void GameLayer::createExplosions(int x, int y) {
 void GameLayer::nextLevel() {
 	game->currentLevel++;
 	if (game->currentLevel > game->finalLevel) {
-		game->currentLevel = 1;
+		game->currentLevel = 0;
+		message = new Actor("res/menu_final.png", WIDTH * 0.5, HEIGHT * 0.5,
+			WIDTH, HEIGHT, game);
+		pause = true;
+		endGame();
 	}
 	init();
 }
 
 void GameLayer::backLevel() {
 	game->currentLevel--;
-	if (game->currentLevel < 1) {
-		game->currentLevel = 1;
+	if (game->currentLevel < 0) {
+		game->currentLevel = 0;
 	}
 	init();
+}
+
+void GameLayer::gamePadToControls(SDL_Event event) {
+
+	// Leer los botones
+	bool buttonA = SDL_GameControllerGetButton(gamePad, SDL_CONTROLLER_BUTTON_A);
+	// SDL_CONTROLLER_BUTTON_A
+	// SDL_CONTROLLER_BUTTON_X, SDL_CONTROLLER_BUTTON_Y
+	cout << "botones:" << buttonA <<  endl;
+	int stickX = SDL_GameControllerGetAxis(gamePad, SDL_CONTROLLER_AXIS_LEFTX);
+	int stickY = SDL_GameControllerGetAxis(gamePad, SDL_CONTROLLER_AXIS_LEFTY);
+	cout << "stickX" << stickX << endl;
+
+	// Retorna aproximadamente entre [-32800, 32800], el centro debería estar en 0
+	// Si el mando tiene "holgura" el centro varia [-4000 , 4000]
+	if (stickX > 4000) {
+		controlMoveX = 1;
+	}
+	else if (stickX < -4000) {
+		controlMoveX = -1;
+	}
+	else {
+		controlMoveX = 0;
+	}
+
+	if (buttonA) {
+		controlShoot = true;
+	}
+	else {
+		controlShoot = false;
+	}
+
+	if (stickY > 4000) {
+		controlMoveY = 1;
+	}
+	else if (stickY < -4000) {
+		controlMoveY = -1;
+	}
 }

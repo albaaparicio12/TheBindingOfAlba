@@ -10,6 +10,8 @@ public:
 	virtual void draw();
 	SDL_Texture* texture;
 	bool isOverlap(Actor* actor);
+	bool containsPoint(int pointX, int pointY); // contiene punto
+	bool clicked; // Está pulsado
 	int x;
 	int y;
 	float vx;
