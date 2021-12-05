@@ -15,7 +15,7 @@ public:
 	void update();
 	void moveX(float axis);
 	void moveY(float axis);
-	int shootCadence = 30;
+	int shootCadence = 20;
 	int shootTime = 0;
 	Audio* audioShoot;
 	void draw() override;
@@ -34,7 +34,7 @@ public:
 
 	int lives = 6;
 	int invulnerableTime = 0;
-	void getShoot();
+	void getShoot(int n);
 
 	int bombs = 0;
 	void addBomb();

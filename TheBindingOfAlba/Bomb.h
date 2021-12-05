@@ -1,6 +1,7 @@
 #pragma once
 #include "Actor.h"
 #include "Animation.h"
+#include "Audio.h"
 
 class Bomb : public Actor
 {
@@ -17,5 +18,7 @@ public:
 	Animation* aExploding;
 
 	StatesBomb state = StatesBomb::IDLE;
+
+	Audio* audioBomb;
 };
 
