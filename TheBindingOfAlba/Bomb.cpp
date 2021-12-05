@@ -10,6 +10,8 @@ Bomb::Bomb(float x, float y,bool ex, Game* game) :
 	aExploding = new Animation("res/bomb_exploding.png", 38, 36,
 		266, 36, 4, 7, false, game);
 	
+	audioBomb = new Audio("res/efecto_explosion.wav", false);
+
 	if (toExplode) {
 		animation = aBeforeExplode;
 		state = StatesBomb::EXPLODING;
@@ -45,6 +47,7 @@ void Bomb::update() {
 	if (hasAnimationEnded) {
 		if (animation == aBeforeExplode) {
 			animation = aExploding;
+			audioBomb->play();
 		}
 		else {
 			state = StatesBomb::DESTROYED;

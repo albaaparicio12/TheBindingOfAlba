@@ -1,26 +1,26 @@
 #include "Player.h"
 
 Player::Player(float x, float y, Game* game)
-	: Actor("res/idle_down.png", x, y, 38, 35, game) {
+	: Actor("res/idle_down.png", x, y, 52, 48, game) {
 
 	audioShoot = new Audio("res/efecto_disparo.wav", false);
 
 	aIdleRight = new Animation("res/idle_right.png", width, height,
-		38, 35, 1, 1, true, game);
+		52, 48, 1, 1, true, game);
 	aIdleLeft = new Animation("res/idle_left.png", width, height,
-		38, 35, 6, 1, true, game);
+		52, 48, 6, 1, true, game);
 	aRunningLeft = new Animation("res/walk_left.png", width, height,
-		114, 35, 6, 3, true, game);
+		162, 48, 6, 3, true, game);
 	aRunningRight = new Animation("res/walk_right.png", width, height,
-		114, 35, 6, 3, true, game);
+		162, 48, 6, 3, true, game);
 	aIdleUp = new Animation("res/idle_up.png", width, height,
-		38, 35, 6, 1, true, game);
+		52, 48, 6, 1, true, game);
 	aIdleDown = new Animation("res/idle_down.png", width, height,
-		38, 35, 6, 1, true, game);
+		52, 48, 6, 1, true, game);
 	aRunningUp = new Animation("res/walk_up.png", width, height,
-		114, 35, 6, 3, true, game);
+		162, 48, 6, 3, true, game);
 	aRunningDown = new Animation("res/walk_down.png", width, height,
-		114, 35, 6, 3, true, game);
+		162, 48, 6, 3, true, game);
 
 	animation = aIdleRight;
 	hasKey = false;
@@ -150,10 +150,10 @@ void Player::draw() {
 	}
 }
 
-void Player::getShoot() {
+void Player::getShoot(int n) {
 	if (invulnerableTime <= 0) {
 		if (lives > 0) {
-			lives--;
+			lives-=n;
 			invulnerableTime = 50;
 		}
 	}

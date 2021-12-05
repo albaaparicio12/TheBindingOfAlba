@@ -8,7 +8,7 @@ public:
 	void update();
 	void changeDirection(int x, int y) override;
 	ProjectileEnemy* shoot(int xPlayer, int yPlayer) override;
-	int shootCadence = 150;
+	int shootCadence = 80;
 	int shootTime = 0;
 };
 

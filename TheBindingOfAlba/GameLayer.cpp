@@ -11,6 +11,7 @@ GameLayer::GameLayer(Game* game)
 }
 
 void GameLayer::init() {
+
 	space = new Space(0);
 	tiles.clear();
 	projectiles.clear();
@@ -20,6 +21,7 @@ void GameLayer::init() {
 	explosions.clear();
 	doors.clear();
 	hearts.clear();
+	key = NULL;
 
 	loadMap("res/" + to_string(game->currentLevel) + ".txt");
 	pad = new Pad(WIDTH * 0.15, HEIGHT * 0.80, game);
@@ -304,7 +306,10 @@ void GameLayer::update() {
 
 	for (auto const& enemy : enemies) {
 		if (player->isOverlap(enemy)) {
-			player->getShoot();
+			if (enemy->isBoss)
+				player->getShoot(2);
+			else
+				player->getShoot(1);
 			if (player->lives <= 0) {
 				endGame();
 				return;
@@ -332,7 +337,7 @@ void GameLayer::update() {
 				if (!pInList) {
 					deleteProjectilesEnemy.push_back(projectile);
 				}
-				player->getShoot();
+				player->getShoot(1);
 				if (player->lives == 0) {
 					endGame();
 					return;
@@ -359,6 +364,17 @@ void GameLayer::update() {
 					}
 				}
 			}
+			for (auto const& ex : explosions) {
+				if (ex->isOverlap(projectile)) {
+					bool pInList = std::find(deleteProjectiles.begin(),
+						deleteProjectiles.end(),
+						projectile) != deleteProjectiles.end();
+
+					if (!pInList) {
+						deleteProjectiles.push_back(projectile);
+					}
+				}
+			}
 		}
 	}
 
@@ -375,6 +391,17 @@ void GameLayer::update() {
 			}
 			for (auto const& door : doors) {
 				if (door->isOverlap(projectile)) {
+					bool pInList = std::find(deleteProjectiles.begin(),
+						deleteProjectiles.end(),
+						projectile) != deleteProjectiles.end();
+
+					if (!pInList) {
+						deleteProjectiles.push_back(projectile);
+					}
+				}
+			}
+			for (auto const& ex : explosions) {
+				if (ex->isOverlap(projectile)) {
 					bool pInList = std::find(deleteProjectiles.begin(),
 						deleteProjectiles.end(),
 						projectile) != deleteProjectiles.end();
@@ -699,6 +726,8 @@ void GameLayer::update() {
 	}
 
 void GameLayer::endGame() {
+	audioBackground = new Audio("res/musica_ambiente.mp3", true);
+	audioBackground->play();
 	game->currentLevel = 0;
 	player = NULL;
 	init();
@@ -725,10 +754,10 @@ bool GameLayer::generateRandomHeart(int x, int y) {
 }
 
 void GameLayer::createExplosions(int x, int y) {
-	Explosion* exup = new Explosion(x, y+5, game);
-	Explosion* exdown = new Explosion(x, y-5, game);
-	Explosion* exleft = new Explosion(x-5, y, game);
-	Explosion* exright = new Explosion(x+5, y, game);
+	Explosion* exup = new Explosion(x, y+10, game);
+	Explosion* exdown = new Explosion(x, y-10, game);
+	Explosion* exleft = new Explosion(x-15, y, game);
+	Explosion* exright = new Explosion(x+15, y, game);
 
 	explosions.push_back(exup);
 	space->addStaticActor(exup);
@@ -749,10 +778,19 @@ void GameLayer::nextLevel() {
 		pause = true;
 		endGame();
 	}
+	if (game->currentLevel == game->finalLevel) {
+		audioBackground = new Audio("res/musica_boss.mp3", true);
+		audioBackground->play();
+	}
+
 	init();
 }
 
 void GameLayer::backLevel() {
+	if (game->currentLevel == game->finalLevel) {
+		audioBackground = new Audio("res/musica_ambiente.mp3", true);
+		audioBackground->play();
+	}
 	game->currentLevel--;
 	if (game->currentLevel < 0) {
 		game->currentLevel = 0;
