@@ -18,7 +18,7 @@ void Enemy::draw() {
 void Enemy::impacted() {
 	if (invulnerableTime <= 0) {
 		lifes--;
-		invulnerableTime = 50;
+		invulnerableTime = 40;
 		if (lifes <= 0) {
 			if (state != States::DYING) 
 				state = States::DYING;			

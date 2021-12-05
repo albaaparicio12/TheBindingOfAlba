@@ -152,6 +152,18 @@ void GameLayer::keysToControls(SDL_Event event) {
 		case SDLK_s: // abajo
 			controlMoveY = 1;
 			break;
+		case SDLK_RIGHT: // derecha
+			controlMoveX = 1;
+			break;
+		case SDLK_LEFT: // izquierda
+			controlMoveX = -1;
+			break;
+		case SDLK_UP: // arriba
+			controlMoveY = -1;
+			break;
+		case SDLK_DOWN: // abajo
+			controlMoveY = 1;
+			break;
 		case SDLK_SPACE: // dispara
 			controlShoot = true;
 			break;
@@ -180,6 +192,26 @@ void GameLayer::keysToControls(SDL_Event event) {
 			}
 			break;
 		case SDLK_s: // abajo
+			if (controlMoveY == 1) {
+				controlMoveY = 0;
+			}
+			break;
+		case SDLK_RIGHT: // derecha
+			if (controlMoveX == 1) {
+				controlMoveX = 0;
+			}
+			break;
+		case SDLK_LEFT: // izquierda
+			if (controlMoveX == -1) {
+				controlMoveX = 0;
+			}
+			break;
+		case SDLK_UP: // arriba
+			if (controlMoveY == -1) {
+				controlMoveY = 0;
+			}
+			break;
+		case SDLK_DOWN: // abajo
 			if (controlMoveY == 1) {
 				controlMoveY = 0;
 			}

@@ -9,12 +9,12 @@ Boss::Boss(float x, float y, Game* game)
 	state = States::IDLE;
 
 	aDying = new Animation("res/boss2.png", width, height,
-		600, 66, 4, 10, false, game);
+		600, 66, 1, 10, false, game);
 	aMoving = new Animation("res/boss2.png", width, height,
 		600, 66, 4, 10, true, game);
 	animation = aMoving;
 
-	lifes = 6;
+	lifes = 4;
 	isBoss = true;
 }
 
@@ -22,6 +22,7 @@ void Boss::update() {
 	if (invulnerableTime > 0) {
 		invulnerableTime--;
 	}
+	shootTime--;
 	bool endAnimation = animation->update();
 	if (endAnimation) {
 		if (state == States::DYING) {
@@ -56,7 +57,7 @@ void Boss::changeDirection(int x, int y) {
 ProjectileEnemy* Boss::shoot(int xPlayer, int yPlayer) {
 	if (shootTime <= 0) {
 		shootTime = shootCadence;
-		auto projectile = new ProjectileEnemy(x, y, game);
+		auto projectile = new ProjectileEnemy("res/disparo_boss.png",x, y, game);
 		if (x - xPlayer > 10)
 			projectile->vx = -5;
 

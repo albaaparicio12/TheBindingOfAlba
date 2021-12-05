@@ -13,7 +13,7 @@ EnemyShooter::EnemyShooter(float x, float y, Game* game)
 		128, 32, 6, 4, false, game);
 	animation = aMoving;
 
-	lifes = 2;
+	lifes = 1;
 }
 
 void EnemyShooter::update() {
