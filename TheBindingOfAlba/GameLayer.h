@@ -47,6 +47,7 @@ public:
 	int controlMoveY = 0;
 	int controlMoveX = 0;
 	bool controlBomb = false;
+	bool controlContinue = false;
 
 	list<Enemy*> enemies;
 	list<Projectile*> projectiles;
@@ -78,6 +79,9 @@ public:
 
 	bool generateRandomHeart(int x, int y);
 	list<Heart*> hearts;
+
+	Actor* message;
+	bool pause;
 
 	// Elementos de interfaz
 	Actor* buttonShoot;

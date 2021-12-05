@@ -93,6 +93,12 @@ void GameLayer::processControls() {
 			}
 		}
 	}
+
+	if (controlContinue) {
+		pause = false;
+		controlContinue = false;
+	}
+
 	// Eje X
 	if (controlMoveX > 0) {
 		player->moveX(1);
@@ -194,6 +200,7 @@ void GameLayer::mouseToControls(SDL_Event event) {
 	float motionY = event.motion.y / game->scaleLower;
 	// Cada vez que hacen click
 	if (event.type == SDL_MOUSEBUTTONDOWN) {
+		controlContinue = true;
 		if (pad->containsPoint(motionX, motionY)) {
 			pad->clicked = true;
 			// CLICK TAMBIEN TE MUEVE
@@ -251,6 +258,9 @@ void GameLayer::mouseToControls(SDL_Event event) {
 
 
 void GameLayer::update() {
+	if (pause) {
+		return;
+	}
 	space->update();
 	player->update();
 
@@ -400,6 +410,10 @@ void GameLayer::update() {
 
 			if (!eInList) {
 				deleteEnemies.push_back(enemy);
+			}
+			if (enemy->isBoss) {
+				nextLevel();
+				return;
 			}
 			if (generateRandomBomb(enemy->x, enemy->y))
 				generateRandomHeart(enemy->x + 10, enemy->y);
@@ -578,6 +592,9 @@ void GameLayer::update() {
 			buttonShoot->draw(); 
 			pad->draw(); 
 		}
+		if (pause) {
+			message->draw();
+		}
 		SDL_RenderPresent(game->renderer);
 	}
 
@@ -682,7 +699,7 @@ void GameLayer::update() {
 	}
 
 void GameLayer::endGame() {
-	game->currentLevel = 1;
+	game->currentLevel = 0;
 	player = NULL;
 	init();
 }
@@ -727,6 +744,10 @@ void GameLayer::nextLevel() {
 	game->currentLevel++;
 	if (game->currentLevel > game->finalLevel) {
 		game->currentLevel = 0;
+		message = new Actor("res/menu_final.png", WIDTH * 0.5, HEIGHT * 0.5,
+			WIDTH, HEIGHT, game);
+		pause = true;
+		endGame();
 	}
 	init();
 }

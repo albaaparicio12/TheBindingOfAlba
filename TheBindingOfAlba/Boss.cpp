@@ -14,7 +14,8 @@ Boss::Boss(float x, float y, Game* game)
 		600, 66, 4, 10, true, game);
 	animation = aMoving;
 
-	lifes = 25;
+	lifes = 6;
+	isBoss = true;
 }
 
 void Boss::update() {
